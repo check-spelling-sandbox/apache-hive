@@ -564,7 +564,7 @@ public class TestVectorPTFGroupBatches {
     }
   }
 
-  /* inititialized to have state which is present in case of the following query:
+  /* initialized to have state which is present in case of the following query:
    * select p_mfgr, p_name, rowindex,
    * count(*) over(partition by p_mfgr order by p_date range between 1 preceding and current row) as cs1,
    * count(*) over(partition by p_mfgr order by p_date range between 3 preceding and current row) as cs2
