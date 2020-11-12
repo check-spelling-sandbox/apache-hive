@@ -118,7 +118,7 @@ public class TestCopyUtils {
     mockStatic(ReplChangeManager.class);
     when(UserGroupInformation.getCurrentUser()).thenReturn(mock(UserGroupInformation.class));
     HiveConf conf = mock(HiveConf.class);
-    conf.set(HiveConf.ConfVars.REPL_RETRY_INTIAL_DELAY.varname, "1s");
+    conf.set(HiveConf.ConfVars.REPL_RETRY_INITIAL_DELAY.varname, "1s");
     FileSystem fs = mock(FileSystem.class);
     Path source = mock(Path.class);
     Path destination = mock(Path.class);
@@ -178,7 +178,7 @@ public class TestCopyUtils {
     mockStatic(ReplChangeManager.class);
     when(UserGroupInformation.getCurrentUser()).thenReturn(mock(UserGroupInformation.class));
     HiveConf conf = mock(HiveConf.class);
-    conf.set(HiveConf.ConfVars.REPL_RETRY_INTIAL_DELAY.varname, "1s");
+    conf.set(HiveConf.ConfVars.REPL_RETRY_INITIAL_DELAY.varname, "1s");
     FileSystem fs = mock(FileSystem.class);
     Path source = mock(Path.class);
     Path destination = mock(Path.class);
