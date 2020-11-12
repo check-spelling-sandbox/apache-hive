@@ -1589,7 +1589,7 @@ public class Hive {
    *          controls whether an exception is thrown or a returns a null
    * @param checkTransactional
    *          checks whether the metadata table stats are valid (or
-   *          compilant with the snapshot isolation of) for the current transaction.
+   *          compliant with the snapshot isolation of) for the current transaction.
    * @return the table or if throwException is false a null value.
    * @throws HiveException
    */
@@ -1611,7 +1611,7 @@ public class Hive {
    *          controls whether an exception is thrown or a returns a null
    * @param checkTransactional
    *          checks whether the metadata table stats are valid (or
-   *          compilant with the snapshot isolation of) for the current transaction.
+   *          compliant with the snapshot isolation of) for the current transaction.
    * @return the table or if throwException is false a null value.
    * @throws HiveException
    */
@@ -1633,7 +1633,7 @@ public class Hive {
    *          controls whether an exception is thrown or a returns a null
    * @param checkTransactional
    *          checks whether the metadata table stats are valid (or
-   *          compilant with the snapshot isolation of) for the current transaction.
+   *          compliant with the snapshot isolation of) for the current transaction.
    * @param getColumnStats
    *          get column statistics if available
    * @return the table or if throwException is false a null value.
