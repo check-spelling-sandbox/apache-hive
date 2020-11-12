@@ -8606,7 +8606,7 @@ public class FastHiveDecimalImpl extends FastHiveDecimal {
   // Decimal Division / Remainder.
 
   /**
-   * EXPERMIMENTAL: Division when divisor fits in a single decimal longword.
+   * EXPERIMENTAL: Division when divisor fits in a single decimal longword.
    *
    * @return  remainderSubexpr2
    */
