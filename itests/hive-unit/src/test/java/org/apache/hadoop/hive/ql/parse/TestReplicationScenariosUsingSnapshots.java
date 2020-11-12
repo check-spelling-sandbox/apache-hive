@@ -887,7 +887,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("insert into exttab values('lucknow')")
         .dump(primaryDbName, withClause);
 
-    // The boootstrap stage, 2 directories for which snapshot is enabled, the database directory and the one table
+    // The bootstrap stage, 2 directories for which snapshot is enabled, the database directory and the one table
     // as part of the config. This would be initial copy stage, so only 1 snapshot per directory and none to be deleted.
     assertIncrementalMetricsValues(BOOTSTRAP, collector, 2 ,0);
 
