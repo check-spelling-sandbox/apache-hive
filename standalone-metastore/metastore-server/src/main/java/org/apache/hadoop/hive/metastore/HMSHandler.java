@@ -5502,13 +5502,13 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
     for (TableMeta tableMeta : tableMetas) {
       String fullDbName = prependCatalogToDbName(catName, tableMeta.getDbName(), conf);
       if (databaseNames.get(fullDbName) == null) {
-        boolean isExecptionThrown = false;
+        boolean isExceptionThrown = false;
         try {
           fireReadDatabasePreEvent(fullDbName);
         } catch (MetaException e) {
-          isExecptionThrown = true;
+          isExceptionThrown = true;
         }
-        databaseNames.put(fullDbName, isExecptionThrown);
+        databaseNames.put(fullDbName, isExceptionThrown);
       }
       if (!databaseNames.get(fullDbName)) {
         finalT.add(tableMeta);

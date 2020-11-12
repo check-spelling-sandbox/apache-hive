@@ -119,7 +119,7 @@ public class RangerDenyTask extends Task<RangerDenyWork> implements Serializable
             work.getMetricCollector().reportStageEnd(getName(), Status.SUCCESS);
             return 0;
         } catch (RuntimeException e) {
-            LOG.error("Runtime Excepton during Ranger Deny policy creation.", e);
+            LOG.error("Runtime Exception during Ranger Deny policy creation.", e);
             setException(e);
             try{
                 ReplUtils.handleException(true, e, work.getCurrentDumpPath().getParent().toString(),
