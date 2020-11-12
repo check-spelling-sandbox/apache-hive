@@ -244,7 +244,7 @@ public final class HiveRelDecorrelator implements ReflectiveVisitor {
             .addRuleInstance(HiveFilterJoinRule.FILTER_ON_JOIN)
             .addRuleInstance(HiveFilterProjectTransposeRule.INSTANCE)
             .addRuleInstance(FLATTEN_CORRELATED_CONDITION_RULE)
-            // FilterCorrelateRule rule mistakenly pushes a FILTER, consiting of correlated vars,
+            // FilterCorrelateRule rule mistakenly pushes a FILTER, consisting of correlated vars,
             // on top of LogicalCorrelate to within  left input for scalar corr queries
             // which causes exception during decorrelation. This has been disabled for now.
             //.addRuleInstance(FilterCorrelateRule.INSTANCE)
