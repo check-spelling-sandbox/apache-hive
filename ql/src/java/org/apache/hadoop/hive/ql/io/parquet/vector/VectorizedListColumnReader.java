@@ -436,7 +436,7 @@ public class VectorizedListColumnReader extends BaseVectorizedColumnReader {
           return compareDecimalColumnVector((DecimalColumnVector) cv1, (DecimalColumnVector) cv2);
         }
         throw new RuntimeException(
-            "Unsupported ColumnVector comparision between " + cv1.getClass().getName()
+            "Unsupported ColumnVector comparison between " + cv1.getClass().getName()
                 + " and " + cv2.getClass().getName());
       } else {
         return false;
