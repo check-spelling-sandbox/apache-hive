@@ -360,16 +360,16 @@ public class MessageBuilder {
     return serializer.toString(uniqueConstraintObj);
   }
 
-  public static String createNotNullConstraintObjJson(SQLNotNullConstraint notNullConstaintObj)
+  public static String createNotNullConstraintObjJson(SQLNotNullConstraint notNullConstraintObj)
       throws TException {
     TSerializer serializer = new TSerializer(new TJSONProtocol.Factory());
-    return serializer.toString(notNullConstaintObj);
+    return serializer.toString(notNullConstraintObj);
   }
 
-  public static String createDefaultConstraintObjJson(SQLDefaultConstraint defaultConstaintObj)
+  public static String createDefaultConstraintObjJson(SQLDefaultConstraint defaultConstraintObj)
     throws TException {
     TSerializer serializer = new TSerializer(new TJSONProtocol.Factory());
-    return serializer.toString(defaultConstaintObj);
+    return serializer.toString(defaultConstraintObj);
   }
 
   public static String createCheckConstraintObjJson(SQLCheckConstraint checkConstraintObj)
