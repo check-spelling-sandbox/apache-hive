@@ -107,7 +107,7 @@ public class TestConstraintsMerge {
   }
 
   /**
-   * this is to test differety types of Acid tables
+   * this is to test different types of Acid tables
    */
   String getTblProperties() {
     return "TBLPROPERTIES ('transactional'='true')";
