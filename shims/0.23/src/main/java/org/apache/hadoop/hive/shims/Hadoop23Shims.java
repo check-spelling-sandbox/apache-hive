@@ -113,7 +113,7 @@ import org.apache.tez.test.MiniTezCluster;
 import static org.apache.hadoop.tools.DistCpConstants.CONF_LABEL_DISTCP_JOB_ID;
 
 /**
- * Implemention of shims against Hadoop 0.23.0.
+ * Implementation of shims against Hadoop 0.23.0.
  */
 public class Hadoop23Shims extends HadoopShimsSecure {
 
