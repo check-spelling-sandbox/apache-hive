@@ -74,13 +74,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * are submitted to wait queue for scheduling. Wait queue tasks are ordered based on the priority
  * of the task. The internal wait queue scheduler moves tasks from wait queue when executor slots
  * are available or when a higher priority task arrives and will schedule it for execution.
- * When pre-emption is enabled, the tasks from wait queue can replace(pre-empt) a running task.
+ * When preemption is enabled, the tasks from wait queue can replace(pre-empt) a running task.
  * The preempted task is reported back to the Application Master(AM) for it to be rescheduled.
  * <br>
  * Because of the concurrent nature of task submission, the position of the task in wait queue is
- * held as long the scheduling of the task from wait queue (with or without pre-emption) is complete.
- * The order of pre-emption is based on the ordering in the pre-emption queue. All tasks that cannot
- * run to completion immediately (canFinish = false) are added to pre-emption queue.
+ * held as long the scheduling of the task from wait queue (with or without preemption) is complete.
+ * The order of preemption is based on the ordering in the preemption queue. All tasks that cannot
+ * run to completion immediately (canFinish = false) are added to preemption queue.
  * <br>
  * When all the executor threads are occupied and wait queue is full, the task scheduler will
  * return SubmissionState.REJECTED response
@@ -771,7 +771,7 @@ public class TaskExecutorService extends AbstractService
     // to the tasks are not ready yet, the task is eligible for pre-emptable.
     if (enablePreemption) {
       if (!canFinish || !isGuaranteed) {
-        LOG.info("Adding {} to pre-emption queue", taskWrapper.getRequestId());
+        LOG.info("Adding {} to preemption queue", taskWrapper.getRequestId());
         addToPreemptionQueue(taskWrapper);
       }
     }
@@ -799,7 +799,7 @@ public class TaskExecutorService extends AbstractService
     if (victim == null) {
       return false; // Woe us.
     }
-    LOG.info("Invoking kill task for {} due to pre-emption to run {}", victim.getRequestId(), rejected.getRequestId());
+    LOG.info("Invoking kill task for {} due to preemption to run {}", victim.getRequestId(), rejected.getRequestId());
     // The task will either be killed or is already in the process of completing, which will
     // trigger the next scheduling run, or result in available slots being higher than 0,
     // which will cause the scheduler loop to continue.
@@ -885,7 +885,7 @@ public class TaskExecutorService extends AbstractService
           addToPreemptionQueue(taskWrapper);
         } else {
           // if guaranteed task, if the finishable state changed to non-finishable and if the task doesn't exist
-          // pre-emption queue, then add it so that it becomes candidate to kill
+          // preemption queue, then add it so that it becomes candidate to kill
           taskWrapper.updateCanFinishForPriority(newFinishableState);
           if (!newFinishableState && !taskWrapper.isInPreemptionQueue()) {
             // No need to check guaranteed here; if it was false we would already be in the queue.
@@ -1046,7 +1046,7 @@ public class TaskExecutorService extends AbstractService
     }
 
     private void updatePreemptionListAndNotify(EndReason reason) {
-      // if this task was added to pre-emption list, remove it
+      // if this task was added to preemption list, remove it
       if (enablePreemption) {
         String state = reason == null ? "FAILED" : reason.name();
         boolean removed = removeFromPreemptionQueueUnlocked(taskWrapper);
@@ -1080,7 +1080,7 @@ public class TaskExecutorService extends AbstractService
         LOG.warn(
             "Received onSuccess/onFailure for a fragment for which a completing message was not received: {}",
             requestId);
-        // Happens due to AM side pre-emption, or the AM asking for a task to die.
+        // Happens due to AM side preemption, or the AM asking for a task to die.
         // There's no hooks at the moment to get information over.
         // For now - decrement the count to avoid accounting errors.
         runningFragmentCount.decrementAndGet();
