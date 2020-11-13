@@ -158,7 +158,7 @@ public class VectorPTFGroupBatches extends PTFPartition {
    */
   class PartitionMetrics {
     /**
-     * This contains the total number of batches recieved for buffering in non-streaming mode.
+     * This contains the total number of batches received for buffering in non-streaming mode.
      */
     public int totalNumberOfBatches;
     /**
