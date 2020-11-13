@@ -1164,24 +1164,24 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
   public void testTruncatePartitionAndCompactionConcurrent() throws Exception {
     execDDLOpAndCompactionConcurrently("TRUNCATE_PARTITION", true);
   }
-  private void execDDLOpAndCompactionConcurrently(String opType, boolean isPartioned) throws Exception {
+  private void execDDLOpAndCompactionConcurrently(String opType, boolean isPartitioned) throws Exception {
     String tblName = "hive12352";
     String partName = "test";
 
     runStatementOnDriver("DROP TABLE if exists " + tblName);
     runStatementOnDriver("CREATE TABLE " + tblName + "(a INT, b STRING)" +
-      (isPartioned ? "partitioned by (p STRING)" : "") +
+      (isPartitioned ? "partitioned by (p STRING)" : "") +
       " STORED AS ORC  TBLPROPERTIES ( 'transactional'='true' )");
 
     //create some data
     runStatementOnDriver("INSERT INTO " + tblName +
-      (isPartioned ? " PARTITION (p='" + partName + "')" : "") +
+      (isPartitioned ? " PARTITION (p='" + partName + "')" : "") +
       " VALUES (1, 'foo'),(2, 'bar'),(3, 'baz')");
     runStatementOnDriver("UPDATE " + tblName + " SET b = 'blah' WHERE a = 3");
 
     //run Worker to execute compaction
     CompactionRequest req = new CompactionRequest("default", tblName, CompactionType.MAJOR);
-    if (isPartioned) {
+    if (isPartitioned) {
       req.setPartitionname("p=" + partName);
     }
     txnHandler.compact(req);
@@ -1237,7 +1237,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
 
     FileSystem fs = FileSystem.get(hiveConf);
     FileStatus[] status = fs.listStatus(new Path(getWarehouseDir() + "/" + tblName +
-        (isPartioned ? "/p=" + partName : "")),
+        (isPartitioned ? "/p=" + partName : "")),
       FileUtils.HIDDEN_FILES_PATH_FILTER);
     Assert.assertEquals(0, status.length);
   }
