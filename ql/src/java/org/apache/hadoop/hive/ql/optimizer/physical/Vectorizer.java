@@ -1994,7 +1994,7 @@ public class Vectorizer implements PhysicalPlanResolver {
         supportRemovedReasons.add(removeString);
       }
 
-      // Now rememember what is supported for this query and any support that was
+      // Now remember what is supported for this query and any support that was
       // removed.
       vectorTaskColumnInfo.setSupportSetInUse(supportSet);
       vectorTaskColumnInfo.setSupportRemovedReasons(supportRemovedReasons);
