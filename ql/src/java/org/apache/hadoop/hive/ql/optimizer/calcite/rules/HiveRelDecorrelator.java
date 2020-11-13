@@ -1172,7 +1172,7 @@ public final class HiveRelDecorrelator implements ReflectiveVisitor {
 
     boolean valueGenerator = true;
     if(frame.r == oldInputFrame.r) {
-      // this means correated value generator wasn't generated
+      // this means correlated value generator wasn't generated
       valueGenerator = false;
     }
 

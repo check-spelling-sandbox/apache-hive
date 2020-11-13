@@ -1753,7 +1753,7 @@ public class CalcitePlanner extends SemanticAnalyzer {
     protected RelNode applyPreJoinOrderingTransforms(RelNode basePlan, RelMetadataProvider mdProvider, RexExecutor executorProvider) {
       // TODO: Decorelation of subquery should be done before attempting
       // Partition Pruning; otherwise Expression evaluation may try to execute
-      // corelated sub query.
+      // correlated sub query.
 
       PerfLogger perfLogger = SessionState.getPerfLogger();
 
