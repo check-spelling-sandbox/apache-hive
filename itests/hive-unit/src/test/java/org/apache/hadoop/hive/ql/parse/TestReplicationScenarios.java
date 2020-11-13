@@ -2425,7 +2425,7 @@ public class TestReplicationScenarios {
     try {
       Thread.sleep(cleanerIntervalSeconds * 1000 * 10);
     } catch (InterruptedException e) {
-      LOG.warn("Sleep unsuccesful", e);
+      LOG.warn("Sleep unsuccessful", e);
     }
 
     //verify events get replicated
@@ -2451,7 +2451,7 @@ public class TestReplicationScenarios {
     try {
       Thread.sleep(cleanerIntervalSeconds * 1000 * 10);
     } catch (InterruptedException e) {
-      LOG.warn("Sleep unsuccesful", e);
+      LOG.warn("Sleep unsuccessful", e);
     }
 
     incrDump = replDumpDb(dbName);
@@ -2479,7 +2479,7 @@ public class TestReplicationScenarios {
     try {
       Thread.sleep(cleanerIntervalSeconds * 1000 * 10);
     } catch (InterruptedException e) {
-      LOG.warn("Sleep unsuccesful", e);
+      LOG.warn("Sleep unsuccessful", e);
     }
 
     //check replication success
@@ -2502,7 +2502,7 @@ public class TestReplicationScenarios {
     try {
       Thread.sleep(cleanerIntervalSeconds * 1000 * 10);
     } catch (InterruptedException e) {
-      LOG.warn("Sleep unsuccesful", e);
+      LOG.warn("Sleep unsuccessful", e);
     }
 
     //events should be deleted before dump
