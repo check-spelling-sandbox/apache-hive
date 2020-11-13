@@ -905,7 +905,7 @@ explainOption
     | KW_REOPTIMIZATION
     | KW_LOCKS
     | KW_AST
-    | (KW_VECTORIZATION vectorizationOnly? vectorizatonDetail?)
+    | (KW_VECTORIZATION vectorizationOnly? vectorizationDetail?)
     | KW_DEBUG
     | KW_DDL
     ;
@@ -917,7 +917,7 @@ vectorizationOnly
     -> ^(TOK_ONLY)
     ;
 
-vectorizatonDetail
+vectorizationDetail
 @init { pushMsg("vectorization's detail level clause", state); }
 @after { popMsg(state); }
     : KW_SUMMARY
