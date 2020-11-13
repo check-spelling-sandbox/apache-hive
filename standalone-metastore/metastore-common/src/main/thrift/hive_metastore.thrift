@@ -2357,7 +2357,7 @@ service ThriftHiveMetastore extends fb303.FacebookService
   list<string> get_dataconnectors() throws(1:MetaException o1)
   void alter_dataconnector(1:string name, 2:DataConnector connector) throws(1:MetaException o1, 2:NoSuchObjectException o2)
 
-    // returns the type with given name (make seperate calls for the dependent types if needed)
+    // returns the type with given name (make separate calls for the dependent types if needed)
   Type get_type(1:string name)  throws(1:MetaException o1, 2:NoSuchObjectException o2)
   bool create_type(1:Type type) throws(1:AlreadyExistsException o1, 2:InvalidObjectException o2, 3:MetaException o3)
   bool drop_type(1:string type) throws(1:MetaException o1, 2:NoSuchObjectException o2)
