@@ -180,7 +180,7 @@ class VectorSpillBlockContainer {
         spillRowBytesContainer = new VectorRowBytesContainer(spillLocalDirs);
 
         if (bufferedBatchVectorSerializeRow == null) {
-          initSerizalization();
+          initSerialization();
         }
       }
       return spillRowBytesContainer;
@@ -188,12 +188,12 @@ class VectorSpillBlockContainer {
 
     VectorSerializeRow getVectorSerializeRow() throws HiveException {
       if (bufferedBatchVectorSerializeRow == null) {
-        initSerizalization();
+        initSerialization();
       }
       return bufferedBatchVectorSerializeRow;
     }
 
-    private void initSerizalization() throws HiveException {
+    private void initSerialization() throws HiveException {
       initVectorSerializeRow();
       initVectorDeserializeRow();
     }
