@@ -731,7 +731,7 @@ public abstract class TestHiveMetaStore {
       response = client.getPartitionsWithSpecs(request);
     } catch (Exception ex) {
       ex.printStackTrace();
-      LOG.error("Exception while retrieveing partitions", ex);
+      LOG.error("Exception while retrieving partitions", ex);
       throw ex;
     }
 
