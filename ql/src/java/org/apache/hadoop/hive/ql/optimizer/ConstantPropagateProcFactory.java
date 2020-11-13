@@ -1039,30 +1039,30 @@ public final class ConstantPropagateProcFactory {
       Map<ColumnInfo, ExprNodeDesc> constants = cppCtx.getPropagatedConstants(op);
       cppCtx.getOpToConstantExprs().put(op, constants);
 
-      ExprNodeDesc condn = op.getConf().getPredicate();
+      ExprNodeDesc cond = op.getConf().getPredicate();
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Old filter FIL[" + op.getIdentifier() + "] conditions:" + condn.getExprString());
+        LOG.debug("Old filter FIL[" + op.getIdentifier() + "] conditions:" + cond.getExprString());
       }
-      ExprNodeDesc newCondn = foldExpr(condn, constants, cppCtx, op, 0, true);
-      if (newCondn instanceof ExprNodeConstantDesc) {
-        ExprNodeConstantDesc c = (ExprNodeConstantDesc) newCondn;
+      ExprNodeDesc newCond = foldExpr(cond, constants, cppCtx, op, 0, true);
+      if (newCond instanceof ExprNodeConstantDesc) {
+        ExprNodeConstantDesc c = (ExprNodeConstantDesc) newCond;
         if (Boolean.TRUE.equals(c.getValue())) {
           cppCtx.addOpToDelete(op);
-          LOG.debug("Filter expression {} holds true. Will delete it", condn);
+          LOG.debug("Filter expression {} holds true. Will delete it", cond);
         } else if (Boolean.FALSE.equals(c.getValue())) {
-          LOG.warn("Filter expression {} holds false!", condn);
+          LOG.warn("Filter expression {} holds false!", cond);
         }
       }
-      if (newCondn instanceof ExprNodeConstantDesc && ((ExprNodeConstantDesc)newCondn).getValue() == null) {
+      if (newCond instanceof ExprNodeConstantDesc && ((ExprNodeConstantDesc)newCond).getValue() == null) {
         // where null is same as where false
-        newCondn = new ExprNodeConstantDesc(Boolean.FALSE);
+        newCond = new ExprNodeConstantDesc(Boolean.FALSE);
       }
       if (LOG.isDebugEnabled()) {
-        LOG.debug("New filter FIL[" + op.getIdentifier() + "] conditions:" + newCondn.getExprString());
+        LOG.debug("New filter FIL[" + op.getIdentifier() + "] conditions:" + newCond.getExprString());
       }
 
       // merge it with the downstream col list
-      op.getConf().setPredicate(newCondn);
+      op.getConf().setPredicate(newCond);
       foldOperator(op, cppCtx);
       return null;
     }
