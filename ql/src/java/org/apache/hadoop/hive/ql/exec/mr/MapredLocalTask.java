@@ -482,7 +482,7 @@ public class MapredLocalTask extends Task<MapredLocalWork> implements Serializab
       // push down filters and as of information
       HiveInputFormat.pushFiltersAndAsOf(jobClone, ts, null);
 
-      AcidUtils.setAcidOperationalProperties(jobClone, ts.getConf().isTranscationalTable(),
+      AcidUtils.setAcidOperationalProperties(jobClone, ts.getConf().isTransactionalTable(),
           ts.getConf().getAcidOperationalProperties(), ts.getConf().isFetchDeletedRows());
       AcidUtils.setValidWriteIdList(jobClone, ts.getConf());
 
