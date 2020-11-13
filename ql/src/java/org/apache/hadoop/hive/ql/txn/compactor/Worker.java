@@ -705,7 +705,7 @@ public class Worker extends RemoteCompactorThread implements MetaStoreThread {
   private class CompactionTxn implements AutoCloseable {
     private long txnId = 0;
     private TxnStatus status = TxnStatus.UNKNOWN;
-    private boolean succeessfulCompaction = false;
+    private boolean successfulCompaction = false;
 
     /**
      * Try to open a new txn.
@@ -724,7 +724,7 @@ public class Worker extends RemoteCompactorThread implements MetaStoreThread {
      * Mark compaction as successful. This means the txn will be committed; otherwise it will be aborted.
      */
     void wasSuccessful() {
-      this.succeessfulCompaction = true;
+      this.successfulCompaction = true;
     }
 
     /**
@@ -735,7 +735,7 @@ public class Worker extends RemoteCompactorThread implements MetaStoreThread {
       if (status == TxnStatus.UNKNOWN) {
         return;
       }
-      if (succeessfulCompaction) {
+      if (successfulCompaction) {
         commit();
       } else {
         abort();
