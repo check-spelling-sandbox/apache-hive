@@ -10222,7 +10222,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
       if (schemaVersion == null) {
         throw new NoSuchObjectException("No schema version " + version + "exists");
       }
-      firePreEvent(new PreReadhSchemaVersionEvent(this, Collections.singletonList(schemaVersion)));
+      firePreEvent(new PreReadSchemaVersionEvent(this, Collections.singletonList(schemaVersion)));
       return schemaVersion;
     } catch (MetaException e) {
       LOG.error("Caught exception getting schema version", e);
@@ -10243,7 +10243,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
       if (schemaVersion == null) {
         throw new NoSuchObjectException("No versions of schema " + schemaName + "exist");
       }
-      firePreEvent(new PreReadhSchemaVersionEvent(this, Collections.singletonList(schemaVersion)));
+      firePreEvent(new PreReadSchemaVersionEvent(this, Collections.singletonList(schemaVersion)));
       return schemaVersion;
     } catch (MetaException e) {
       LOG.error("Caught exception getting latest schema version", e);
@@ -10264,7 +10264,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
       if (schemaVersions == null) {
         throw new NoSuchObjectException("No versions of schema " + schemaName + "exist");
       }
-      firePreEvent(new PreReadhSchemaVersionEvent(this, schemaVersions));
+      firePreEvent(new PreReadSchemaVersionEvent(this, schemaVersions));
       return schemaVersions;
     } catch (MetaException e) {
       LOG.error("Caught exception getting all schema versions", e);
@@ -10324,7 +10324,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
     try {
       schemaVersions = getMS().getSchemaVersionsByColumns(rqst.getColName(),
           rqst.getColNamespace(), rqst.getType());
-      firePreEvent(new PreReadhSchemaVersionEvent(this, schemaVersions));
+      firePreEvent(new PreReadSchemaVersionEvent(this, schemaVersions));
       final List<SchemaVersionDescriptor> entries = new ArrayList<>(schemaVersions.size());
       schemaVersions.forEach(schemaVersion -> entries.add(
           new SchemaVersionDescriptor(schemaVersion.getSchema(), schemaVersion.getVersion())));
