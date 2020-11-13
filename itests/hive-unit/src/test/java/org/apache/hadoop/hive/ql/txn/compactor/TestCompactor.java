@@ -2021,7 +2021,7 @@ public class TestCompactor {
   }
 
   @Test
-  public void testCompactionForFileInSratchDir() throws Exception {
+  public void testCompactionForFileInScratchDir() throws Exception {
     String dbName = "default";
     String tblName = "cfs";
     String columnNamesProperty = "a,b";
