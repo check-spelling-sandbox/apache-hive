@@ -229,7 +229,7 @@ public class MemoryDecider implements PhysicalPlanResolver {
           mj.getConf().setMemoryNeeded(size);
         }
       } catch (HiveException e) {
-        // if we have issues with stats, just scale linearily
+        // if we have issues with stats, just scale linearly
         long size = totalAvailableMemory / mapJoins.size();
         LOG.info("Scaling mapjoin memory w/o stats");
 
