@@ -286,7 +286,7 @@ public class ThriftHttpServlet extends TServlet {
       } else {
         try {
           LOG.error("Login attempt is failed for user : " +
-              getUsername(request) + ". Error Messsage :" + e.getMessage());
+              getUsername(request) + ". Error Message :" + e.getMessage());
         } catch (Exception ex) {
           // Ignore Exception
         }
@@ -624,7 +624,7 @@ public class ThriftHttpServlet extends TServlet {
           try {
             LOG.error("Login attempt is failed for user : " +
                 getPrincipalWithoutRealmAndHost(gssContext.getSrcName().toString()) +
-                ". Error Messsage :" + e.getMessage());
+                ". Error Message :" + e.getMessage());
           } catch (Exception ex) {
             // Ignore Exception
           }
