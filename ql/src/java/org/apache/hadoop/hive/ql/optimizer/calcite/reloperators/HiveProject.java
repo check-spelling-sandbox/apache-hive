@@ -40,7 +40,7 @@ import org.apache.hadoop.hive.ql.optimizer.calcite.TraitsUtil;
 
 public class HiveProject extends Project implements HiveRelNode {
 
-  private boolean isSysnthetic;
+  private boolean isSynthetic;
 
   /**
    * Creates a HiveProject.
@@ -118,11 +118,11 @@ public class HiveProject extends Project implements HiveRelNode {
   // TODO: this should come through RelBuilder to the constructor as opposed to
   // set method. This requires calcite change
   public void setSynthetic() {
-    this.isSysnthetic = true;
+    this.isSynthetic = true;
   }
 
   public boolean isSynthetic() {
-    return isSysnthetic;
+    return isSynthetic;
   }
 
   //required for HiveRelDecorrelator
@@ -136,6 +136,6 @@ public class HiveProject extends Project implements HiveRelNode {
   @Override
   public RelWriter explainTerms(RelWriter pw) {
     return super.explainTerms(pw)
-        .itemIf("synthetic", this.isSysnthetic, pw.getDetailLevel() == SqlExplainLevel.DIGEST_ATTRIBUTES);
+        .itemIf("synthetic", this.isSynthetic, pw.getDetailLevel() == SqlExplainLevel.DIGEST_ATTRIBUTES);
   }
 }
