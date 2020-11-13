@@ -879,7 +879,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
   }
 
   /**
-   * Test update that hits multiple partitions (i.e. requries dynamic partition insert to process)
+   * Test update that hits multiple partitions (i.e. requires dynamic partition insert to process)
    * @throws Exception
    */
   @Test
