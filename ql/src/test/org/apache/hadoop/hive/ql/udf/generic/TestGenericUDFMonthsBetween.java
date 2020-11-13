@@ -169,7 +169,7 @@ public class TestGenericUDFMonthsBetween {
     runTestTs("2000-06-01 00:00:00", "2004-07-01 00:00:00", -49.0, udf);
     // test February of non-leap year, 2/28
     runTestTs("2002-02-28 00:00:00", "2002-03-01 00:00:00", -0.12903226, udf);
-    // test February of non-leap year, 2/31 is viewd as 3/3 due to 3 days diff
+    // test February of non-leap year, 2/31 is viewed as 3/3 due to 3 days diff
     // from 2/31 to 2/28
 
     // test Feb of leap year, 2/29
