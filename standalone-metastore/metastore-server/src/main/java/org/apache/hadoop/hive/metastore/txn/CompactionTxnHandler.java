@@ -643,7 +643,7 @@ class CompactionTxnHandler extends TxnHandler {
   }
 
   /**
-   * Clean up entries from TXN_TO_WRITE_ID table less than min_uncommited_txnid as found by
+   * Clean up entries from TXN_TO_WRITE_ID table less than min_uncommitted_txnid as found by
    * min(max(TXNS.txn_id), min(WRITE_SET.WS_COMMIT_ID), min(Aborted TXNS.txn_id)).
    */
   @Override
@@ -681,14 +681,14 @@ class CompactionTxnHandler extends TxnHandler {
         if (!rs.next()) {
           throw new MetaException("Transaction tables not properly initialized, no record found in TXNS");
         }
-        long minUncommitedTxnid = minTxnIdSeenOpen < 0 ? rs.getLong(1) : Math.min(rs.getLong(1), minTxnIdSeenOpen);
+        long minUncommittedTxnid = minTxnIdSeenOpen < 0 ? rs.getLong(1) : Math.min(rs.getLong(1), minTxnIdSeenOpen);
 
         // As all txns below min_uncommitted_txnid are either committed or empty_aborted, we are allowed
         // to cleanup the entries less than min_uncommitted_txnid from the TXN_TO_WRITE_ID table.
-        s = "DELETE FROM \"TXN_TO_WRITE_ID\" WHERE \"T2W_TXNID\" < " + minUncommitedTxnid;
+        s = "DELETE FROM \"TXN_TO_WRITE_ID\" WHERE \"T2W_TXNID\" < " + minUncommittedTxnid;
         LOG.debug("Going to execute delete <" + s + ">");
         int rc = stmt.executeUpdate(s);
-        LOG.info("Removed " + rc + " rows from TXN_TO_WRITE_ID with Txn Low-Water-Mark: " + minUncommitedTxnid);
+        LOG.info("Removed " + rc + " rows from TXN_TO_WRITE_ID with Txn Low-Water-Mark: " + minUncommittedTxnid);
 
         LOG.debug("Going to commit");
         dbConn.commit();
