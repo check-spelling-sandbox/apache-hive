@@ -385,7 +385,7 @@ public class BasicStatsTask implements Serializable, IStatsProcessor {
         }
 
         if (work.isStatsReliable() && updates.size() != processors.size()) {
-          LOG.info("Stats should be reliadble...however seems like there were some issue.. => ret 1");
+          LOG.info("Stats should be reliable...however seems like there were some issue.. => ret 1");
           ret = 1;
         }
       }
