@@ -174,7 +174,7 @@ public class DynamicPartitionPruner {
       Iterator<String> cit = columnNames.iterator();
       Iterator<String> typit = columnTypes.iterator();
       Iterator<ExprNodeDesc> pit = partKeyExprs.iterator();
-      Iterator<ExprNodeDesc> predit = predicates.iterator();
+      Iterator<ExprNodeDesc> predicate = predicates.iterator();
       // A single source can process multiple columns, and will send an event for each of them.
       for (TableDesc t : tables) {
         numExpectedEventsPerSource.get(s).decrement();
@@ -182,7 +182,7 @@ public class DynamicPartitionPruner {
         String columnName = cit.next();
         String columnType = typit.next();
         ExprNodeDesc partKeyExpr = pit.next();
-        ExprNodeDesc predicate = predit.next();
+        ExprNodeDesc predicate = predicate.next();
         SourceInfo si = createSourceInfo(t, partKeyExpr, predicate, columnName, columnType, jobConf);
         if (!sourceInfoMap.containsKey(s)) {
           sourceInfoMap.put(s, new ArrayList<SourceInfo>());
