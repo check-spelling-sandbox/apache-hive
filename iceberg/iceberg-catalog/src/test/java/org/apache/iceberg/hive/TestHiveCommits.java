@@ -228,7 +228,7 @@ public class TestHiveCommits extends HiveTableBaseTest {
    * if their commit succeeded or not
    *
    * Timeline:
-   *   Client 1 commits which throws an exception but suceeded
+   *   Client 1 commits which throws an exception but succeeded
    *   Client 1's lock expires while waiting to do the recheck for commit success
    *   Client 2 acquires a lock, commits successfully on top of client 1's commit and release lock
    *   Client 1 check's to see if their commit was successful
