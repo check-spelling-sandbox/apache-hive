@@ -4213,7 +4213,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
                   new long[0], new BitSet(), writeId);
           validWriteIds = validWriteIdList.toString();
         }
-        updatePartitonColStatsInternal(tbl, partColStats, validWriteIds, writeId);
+        updatePartitionColStatsInternal(tbl, partColStats, validWriteIds, writeId);
       }
 
       success = ms.commitTransaction();
@@ -6896,7 +6896,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
     colStats.setStatsObj(colStats.getStatsObj());
   }
 
-  private boolean updatePartitonColStatsInternal(Table tbl, ColumnStatistics colStats,
+  private boolean updatePartitionColStatsInternal(Table tbl, ColumnStatistics colStats,
                                                  String validWriteIds, long writeId)
       throws MetaException, InvalidObjectException, NoSuchObjectException, InvalidInputException {
     normalizeColStatsInput(colStats);
@@ -7014,7 +7014,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
   @Override
   public boolean update_partition_column_statistics(ColumnStatistics colStats) throws TException {
     // Deprecated API.
-    return updatePartitonColStatsInternal(null, colStats, null, -1);
+    return updatePartitionColStatsInternal(null, colStats, null, -1);
   }
 
 
@@ -7030,7 +7030,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
       throw new InvalidInputException("Merge is not supported for non-aggregate stats");
     }
     ColumnStatistics colStats = req.getColStatsIterator().next();
-    boolean ret = updatePartitonColStatsInternal(null, colStats,
+    boolean ret = updatePartitionColStatsInternal(null, colStats,
         req.getValidWriteIdList(), req.getWriteId());
     return new SetPartitionsStatsResponse(ret);
   }
@@ -8922,7 +8922,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
         } else {
           for (Map.Entry<String, ColumnStatistics> entry : newStatsMap.entrySet()) {
             // We don't short-circuit on errors here anymore. That can leave acid stats invalid.
-            ret = updatePartitonColStatsInternal(t, entry.getValue(),
+            ret = updatePartitionColStatsInternal(t, entry.getValue(),
                     request.getValidWriteIdList(), request.getWriteId()) && ret;
           }
         }
@@ -8985,7 +8985,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
           if (useDirectSql) {
             statsMap.put(csNew.getStatsDesc().getPartName(), csNew);
           } else {
-            result = updatePartitonColStatsInternal(t, csNew,
+            result = updatePartitionColStatsInternal(t, csNew,
                     request.getValidWriteIdList(), request.getWriteId()) && result;
           }
         } else if (isInvalidTxnStats) {
