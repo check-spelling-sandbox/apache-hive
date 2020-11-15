@@ -1171,7 +1171,7 @@ class CompactionTxnHandler extends TxnHandler {
         dbConn = getDbConn(Connection.TRANSACTION_READ_COMMITTED);
         stmt = dbConn.createStatement();
         /* cc_id is monotonically increasing so for any entity sorts in order of compaction history,
-        thus this query groups by entity and withing group sorts most recent first */
+        thus this query groups by entity and within group sorts most recent first */
         rs = stmt.executeQuery("SELECT \"CC_ID\", \"CC_DATABASE\", \"CC_TABLE\", \"CC_PARTITION\", "
             + "\"CC_STATE\" , \"CC_START\", \"CC_TYPE\" "
             + "FROM \"COMPLETED_COMPACTIONS\" ORDER BY \"CC_DATABASE\", \"CC_TABLE\", \"CC_PARTITION\"," +
