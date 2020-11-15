@@ -971,10 +971,10 @@ public class TaskExecutorService extends AbstractService
    */
   private static boolean canPreempt(TaskWrapper candidate, TaskWrapper victim) {
     if (victim == null) return false;
-    SignableVertexSpec candVrtx = candidate.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
-    SignableVertexSpec vicVrtx = victim.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
-    if (candVrtx.getHiveQueryId().equals(vicVrtx.getHiveQueryId()) &&
-        candVrtx.getVertexIndex() == vicVrtx.getVertexIndex()) return false;
+    SignableVertexSpec candVertex = candidate.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
+    SignableVertexSpec vicVertex = victim.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
+    if (candVertex.getHiveQueryId().equals(vicVertex.getHiveQueryId()) &&
+        candVertex.getVertexIndex() == vicVertex.getVertexIndex()) return false;
     if (candidate.isGuaranteed() && !victim.isGuaranteed()) return true;
     return ((candidate.isGuaranteed() == victim.isGuaranteed())
         && candidate.canFinishForPriority() && !victim.getTaskRunnerCallable().canFinish());
