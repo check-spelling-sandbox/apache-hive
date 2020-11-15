@@ -91,7 +91,7 @@ public class DataWritableReadSupport extends ReadSupport<ArrayWritable> {
   }
 
   /**
-   * Searchs column names by name on a given Parquet schema, and returns its corresponded
+   * Searches column names by name on a given Parquet schema, and returns its corresponded
    * Parquet schema types.
    *
    * @param schema Group schema where to search for column names.
