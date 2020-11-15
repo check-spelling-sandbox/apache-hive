@@ -1869,7 +1869,7 @@ columnNameTransformConstraint
     ;
 
 partitionTransformType
-@init {pushMsg("partitition transform type specification", state); }
+@init {pushMsg("partition transform type specification", state); }
 @after { popMsg(state); }
     : columnName
     -> {containExcludedCharForCreateTableColumnName($columnName.text)}? {throwColumnNameException()}

@@ -2090,7 +2090,7 @@ import static org.apache.hadoop.hive.metastore.Warehouse.DEFAULT_CATALOG_NAME;
     return colStats;
   }
   /**
-   * Create an unpartitoned table object for the given db.
+   * Create an unpartitioned table object for the given db.
    * The table has 9 types of columns
    * @param db
    * @return
@@ -2122,7 +2122,7 @@ import static org.apache.hadoop.hive.metastore.Warehouse.DEFAULT_CATALOG_NAME;
   }
 
   /**
-   * Create a partitoned table object for the given db.
+   * Create a partitioned table object for the given db.
    * The table has 9 types of columns.
    * The partition columns are string and integer
    * @param db
