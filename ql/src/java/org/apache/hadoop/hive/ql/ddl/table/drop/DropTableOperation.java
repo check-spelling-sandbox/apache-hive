@@ -91,7 +91,7 @@ public class DropTableOperation extends DDLOperation<DropTableDesc> {
        */
       Map<String, String> dbParams = context.getDb().getDatabase(table.getDbName()).getParameters();
       if (!replicationSpec.allowEventReplacementInto(dbParams)) {
-        // Drop occured as part of replicating a drop, but the destination
+        // Drop occurred as part of replicating a drop, but the destination
         // table was newer than the event being replicated. Ignore, but drop
         // any partitions inside that are older.
         if (table.isPartitioned()) {
