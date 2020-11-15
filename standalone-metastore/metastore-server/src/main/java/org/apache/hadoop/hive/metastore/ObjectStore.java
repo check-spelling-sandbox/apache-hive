@@ -289,7 +289,7 @@ public class ObjectStore implements RawStore, Configurable {
   private static final Logger LOG = LoggerFactory.getLogger(ObjectStore.class);
 
   private enum TXN_STATUS {
-    NO_STATE, OPEN, COMMITED, ROLLBACK
+    NO_STATE, OPEN, COMMITTED, ROLLBACK
   }
 
   /**
@@ -606,7 +606,7 @@ public class ObjectStore implements RawStore, Configurable {
     debugLog("Commit transaction: count = " + openTrasactionCalls + ", isactive "+ currentTransaction.isActive());
 
     if ((openTrasactionCalls == 0) && currentTransaction.isActive()) {
-      transactionStatus = TXN_STATUS.COMMITED;
+      transactionStatus = TXN_STATUS.COMMITTED;
       currentTransaction.commit();
     }
     return true;
@@ -702,7 +702,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public List<String> getCatalogs() {
     LOG.debug("Fetching all catalog names");
-    boolean commited = false;
+    boolean committed = false;
     List<String> catalogs = null;
 
     String queryStr = "select name from org.apache.hadoop.hive.metastore.model.MCatalog";
@@ -713,9 +713,9 @@ public class ObjectStore implements RawStore, Configurable {
       query = pm.newQuery(queryStr);
       query.setResult("name");
       catalogs = new ArrayList<>((Collection<String>) query.execute());
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     Collections.sort(catalogs);
     return catalogs;
@@ -781,7 +781,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public void createDatabase(Database db) throws InvalidObjectException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     MDatabase mdb = new MDatabase();
     assert db.getCatalogName() != null;
     mdb.setCatalogName(normalizeIdentifier(db.getCatalogName()));
@@ -805,9 +805,9 @@ public class ObjectStore implements RawStore, Configurable {
     try {
       openTransaction();
       pm.makePersistent(mdb);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -816,7 +816,7 @@ public class ObjectStore implements RawStore, Configurable {
   @SuppressWarnings("nls")
   private MDatabase getMDatabase(String catName, String name) throws NoSuchObjectException {
     MDatabase mdb = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -827,9 +827,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.setUnique(true);
       mdb = (MDatabase) query.execute(name, catName);
       pm.retrieve(mdb);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     if (mdb == null) {
       throw new NoSuchObjectException("There is no database " + catName + "." + name);
@@ -876,13 +876,13 @@ public class ObjectStore implements RawStore, Configurable {
 
   public Database getJDODatabase(String catName, String name) throws NoSuchObjectException {
     MDatabase mdb = null;
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       mdb = getMDatabase(catName, name);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -980,7 +980,7 @@ public class ObjectStore implements RawStore, Configurable {
     if (pattern == null || pattern.equals("*")) {
       return getAllDatabases(catName);
     }
-    boolean commited = false;
+    boolean committed = false;
     List<String> databases = null;
     Query query = null;
     try {
@@ -997,16 +997,16 @@ public class ObjectStore implements RawStore, Configurable {
       query.setOrdering("name ascending");
       Collection<String> names = (Collection<String>) query.executeWithArray(parameterVals.toArray(new String[0]));
       databases = new ArrayList<>(names);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return databases;
   }
 
   @Override
   public List<String> getAllDatabases(String catName) throws MetaException {
-    boolean commited = false;
+    boolean committed = false;
     List<String> databases = null;
 
     Query query = null;
@@ -1019,9 +1019,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.declareParameters("java.lang.String catname");
       query.setResult("name");
       databases = new ArrayList<>((Collection<String>) query.execute(catName));
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     Collections.sort(databases);
     return databases;
@@ -1029,7 +1029,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public void createDataConnector(DataConnector connector) throws InvalidObjectException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     MDataConnector mDataConnector = new MDataConnector();
     mDataConnector.setName(connector.getName().toLowerCase());
     mDataConnector.setType(connector.getType());
@@ -1043,9 +1043,9 @@ public class ObjectStore implements RawStore, Configurable {
     try {
       openTransaction();
       pm.makePersistent(mDataConnector);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -1054,7 +1054,7 @@ public class ObjectStore implements RawStore, Configurable {
   @SuppressWarnings("nls")
   private MDataConnector getMDataConnector(String name) throws NoSuchObjectException {
     MDataConnector mdc = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -1064,9 +1064,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.setUnique(true);
       mdc = (MDataConnector) query.execute(name);
       pm.retrieve(mdc);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     if (mdc == null) {
       throw new NoSuchObjectException("There is no dataconnector " + name);
@@ -1077,15 +1077,15 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public DataConnector getDataConnector(String name) throws NoSuchObjectException {
     MDataConnector mdc = null;
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       mdc = getMDataConnector(name);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } catch (NoSuchObjectException no) {
       throw new NoSuchObjectException("Dataconnector named " + name + " does not exist:" + no.getCause());
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -1105,7 +1105,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public List<String> getAllDataConnectorNames() throws MetaException {
-    boolean commited = false;
+    boolean committed = false;
     List<String> connectors = null;
     Query query = null;
     try {
@@ -1115,9 +1115,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.setOrdering("name ascending");
       Collection<String> names = (Collection<String>) query.executeWithArray();
       connectors = new ArrayList<>(names);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return connectors;
   }
@@ -1202,13 +1202,13 @@ public class ObjectStore implements RawStore, Configurable {
 
   private DataConnector getDataConnectorInternal(String name) throws NoSuchObjectException {
     MDataConnector mdc = null;
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       mdc = getMDataConnector(name);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -1259,14 +1259,14 @@ public class ObjectStore implements RawStore, Configurable {
   public boolean createType(Type type) {
     boolean success = false;
     MType mtype = getMType(type);
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       pm.makePersistent(mtype);
-      commited = commitTransaction();
+      committed = commitTransaction();
       success = true;
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -1276,7 +1276,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public Type getType(String typeName) {
     Type type = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -1287,9 +1287,9 @@ public class ObjectStore implements RawStore, Configurable {
       if (mtype != null) {
         type = getType(mtype);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return type;
   }
@@ -1358,7 +1358,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public void createTable(Table tbl) throws InvalidObjectException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     MTable mtbl = null;
 
     try {
@@ -1391,9 +1391,9 @@ public class ObjectStore implements RawStore, Configurable {
         putPersistentPrivObjects(mtbl, toPersistPrivObjs, now, rolePrivs, PrincipalType.ROLE, "SQL");
       }
       pm.makePersistentAll(toPersistPrivObjs);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -1604,7 +1604,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public Table getTable(String catName, String dbName, String tableName, String writeIdList)
       throws MetaException {
-    boolean commited = false;
+    boolean committed = false;
     Table tbl = null;
     try {
       openTransaction();
@@ -1636,9 +1636,9 @@ public class ObjectStore implements RawStore, Configurable {
           }
         }
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -1728,7 +1728,7 @@ public class ObjectStore implements RawStore, Configurable {
       @Override
       protected List<TableName> getJdoResult(
           GetHelper<List<TableName>> ctx) throws MetaException {
-        boolean commited = false;
+        boolean committed = false;
         Query query = null;
         List<TableName> result = new ArrayList<>();
         openTransaction();
@@ -1751,9 +1751,9 @@ public class ObjectStore implements RawStore, Configurable {
             result.add(new TableName(
                 tbl.getDatabase().getCatalogName(), tbl.getDatabase().getName(), tbl.getTableName()));
           }
-          commited = commitTransaction();
+          committed = commitTransaction();
         } finally {
-          rollbackAndCleanup(commited, query);
+          rollbackAndCleanup(committed, query);
         }
         return result;
       }
@@ -1782,7 +1782,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   private List<String> getTablesInternalViaJdo(String catName, String dbName, String pattern,
                                                TableType tableType, int limit) {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     List<String> tbls = null;
     try {
@@ -1810,9 +1810,9 @@ public class ObjectStore implements RawStore, Configurable {
       }
       Collection<String> names = (Collection<String>) query.executeWithArray(parameterVals.toArray(new String[0]));
       tbls = new ArrayList<>(names);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return tbls;
   }
@@ -1820,7 +1820,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public List<Table> getAllMaterializedViewObjectsForRewriting(String catName) throws MetaException {
     List<Table> allMaterializedViews = new ArrayList<>();
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -1837,9 +1837,9 @@ public class ObjectStore implements RawStore, Configurable {
                 getCreationMetadata(tbl.getCatName(), tbl.getDbName(), tbl.getTableName())));
         allMaterializedViews.add(tbl);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return allMaterializedViews;
   }
@@ -1849,7 +1849,7 @@ public class ObjectStore implements RawStore, Configurable {
       throws MetaException, NoSuchObjectException {
     final String db_name = normalizeIdentifier(dbName);
     catName = normalizeIdentifier(catName);
-    boolean commited = false;
+    boolean committed = false;
     Query<?> query = null;
     List<String> tbls = null;
     try {
@@ -1863,9 +1863,9 @@ public class ObjectStore implements RawStore, Configurable {
       Collection<String> names = (Collection<String>) query.executeWithArray(
           db_name, catName, TableType.MATERIALIZED_VIEW.toString(), true);
       tbls = new ArrayList<>(names);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return tbls;
   }
@@ -1887,7 +1887,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   private int getObjectCount(String fieldName, String objName) {
     Long result = 0L;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -1895,9 +1895,9 @@ public class ObjectStore implements RawStore, Configurable {
         "select count(" + fieldName + ") from " + objName;
       query = pm.newQuery(queryStr);
       result = (Long) query.execute();
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return result.intValue();
   }
@@ -1906,7 +1906,7 @@ public class ObjectStore implements RawStore, Configurable {
   public List<TableMeta> getTableMeta(String catName, String dbNames, String tableNames,
                                       List<String> tableTypes) throws MetaException {
 
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     List<TableMeta> metas = new ArrayList<>();
     try {
@@ -1948,10 +1948,10 @@ public class ObjectStore implements RawStore, Configurable {
         }
         metas.add(metaData);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
       pm.getFetchPlan().removeGroup(FetchGroups.FETCH_DATABASE_ON_MTABLE);
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return metas;
   }
@@ -2019,7 +2019,7 @@ public class ObjectStore implements RawStore, Configurable {
                                        boolean retrieveCD) {
     AttachedMTableInfo nmtbl = new AttachedMTableInfo();
     MTable mtbl = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -2043,16 +2043,16 @@ public class ObjectStore implements RawStore, Configurable {
         pm.retrieveAll(mtbl.getSd().getCD());
         nmtbl.mcd = mtbl.getSd().getCD();
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     nmtbl.mtbl = mtbl;
     return nmtbl;
   }
 
   private MCreationMetadata getCreationMetadata(String catName, String dbName, String tblName) {
-    boolean commited = false;
+    boolean committed = false;
     MCreationMetadata mcm = null;
     Query query = null;
     catName = normalizeIdentifier(catName);
@@ -2066,9 +2066,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.setUnique(true);
       mcm = (MCreationMetadata) query.execute(tblName, dbName, catName);
       pm.retrieve(mcm);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return mcm;
   }
@@ -2670,7 +2670,7 @@ public class ObjectStore implements RawStore, Configurable {
   public boolean addPartition(Partition part) throws InvalidObjectException,
       MetaException {
     boolean success = false;
-    boolean commited = false;
+    boolean committed = false;
 
     try {
       openTransaction();
@@ -2712,10 +2712,10 @@ public class ObjectStore implements RawStore, Configurable {
         }
       }
 
-      commited = commitTransaction();
+      committed = commitTransaction();
       success = true;
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -2822,7 +2822,7 @@ public class ObjectStore implements RawStore, Configurable {
     tableName = normalizeIdentifier(tableName);
     List<MPartition> mparts = null;
     MPartition ret = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -2834,7 +2834,7 @@ public class ObjectStore implements RawStore, Configurable {
           + "java.lang.String t4");
       mparts = (List<MPartition>) query.executeWithArray(tableName, dbName, name, catName);
       pm.retrieveAll(mparts);
-      commited = commitTransaction();
+      committed = commitTransaction();
       // We need to compare partition name with requested name since some DBs
       // (like MySQL, Derby) considers 'a' = 'a ' whereas others like (Postgres,
       // Oracle) doesn't exhibit this problem.
@@ -2854,7 +2854,7 @@ public class ObjectStore implements RawStore, Configurable {
         }
       }
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return ret;
   }
@@ -5308,7 +5308,7 @@ public class ObjectStore implements RawStore, Configurable {
   }
 
   private  boolean constraintNameAlreadyExists(MTable table, String constraintName) {
-    boolean commited = false;
+    boolean committed = false;
     Query<MConstraint> constraintExistsQuery = null;
     String constraintNameIfExists = null;
     try {
@@ -5320,9 +5320,9 @@ public class ObjectStore implements RawStore, Configurable {
       constraintExistsQuery.setUnique(true);
       constraintExistsQuery.setResult("constraintName");
       constraintNameIfExists = (String) constraintExistsQuery.executeWithArray(table, constraintName);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, constraintExistsQuery);
+      rollbackAndCleanup(committed, constraintExistsQuery);
     }
     return constraintNameIfExists != null && !constraintNameIfExists.isEmpty();
   }
@@ -6026,7 +6026,7 @@ public class ObjectStore implements RawStore, Configurable {
   public boolean addRole(String roleName, String ownerName)
       throws InvalidObjectException, MetaException, NoSuchObjectException {
     boolean success = false;
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MRole nameCheck = this.getMRole(roleName);
@@ -6036,10 +6036,10 @@ public class ObjectStore implements RawStore, Configurable {
       int now = (int) (System.currentTimeMillis() / 1000);
       MRole mRole = new MRole(roleName, now, ownerName);
       pm.makePersistent(mRole);
-      commited = commitTransaction();
+      committed = commitTransaction();
       success = true;
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -6051,7 +6051,7 @@ public class ObjectStore implements RawStore, Configurable {
       PrincipalType principalType, String grantor, PrincipalType grantorType,
       boolean grantOption) throws MetaException, NoSuchObjectException,InvalidObjectException {
     boolean success = false;
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MRoleMap roleMap = null;
@@ -6072,10 +6072,10 @@ public class ObjectStore implements RawStore, Configurable {
       MRoleMap roleMember = new MRoleMap(userName, principalType.toString(),
           mRole, (int) now, grantor, grantorType.toString(), grantOption);
       pm.makePersistent(roleMember);
-      commited = commitTransaction();
+      committed = commitTransaction();
       success = true;
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -6125,7 +6125,7 @@ public class ObjectStore implements RawStore, Configurable {
   private MRoleMap getMSecurityUserRoleMap(String userName, PrincipalType principalType,
       String roleName) {
     MRoleMap mRoleMember = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -6136,9 +6136,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.setUnique(true);
       mRoleMember = (MRoleMap) query.executeWithArray(userName, principalType.toString(), roleName);
       pm.retrieve(mRoleMember);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return mRoleMember;
   }
@@ -6361,7 +6361,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   private MRole getMRole(String roleName) {
     MRole mrole = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -6370,9 +6370,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.setUnique(true);
       mrole = (MRole) query.execute(roleName);
       pm.retrieve(mrole);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return mrole;
   }
@@ -6401,7 +6401,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public PrincipalPrivilegeSet getUserPrivilegeSet(String userName,
       List<String> groupNames) throws InvalidObjectException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     PrincipalPrivilegeSet ret = new PrincipalPrivilegeSet();
     try {
       openTransaction();
@@ -6438,9 +6438,9 @@ public class ObjectStore implements RawStore, Configurable {
         }
         ret.setGroupPrivileges(groupPriv);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -6475,7 +6475,7 @@ public class ObjectStore implements RawStore, Configurable {
   public PrincipalPrivilegeSet getDBPrivilegeSet(String catName, String dbName,
       String userName, List<String> groupNames) throws InvalidObjectException,
       MetaException {
-    boolean commited = false;
+    boolean committed = false;
     catName = normalizeIdentifier(catName);
     dbName = normalizeIdentifier(dbName);
 
@@ -6505,9 +6505,9 @@ public class ObjectStore implements RawStore, Configurable {
         }
         ret.setRolePrivileges(dbRolePriv);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -6549,7 +6549,7 @@ public class ObjectStore implements RawStore, Configurable {
       String userName, List<String> groupNames)  throws InvalidObjectException,
       MetaException {
 
-    boolean commited = false;
+    boolean committed = false;
     catName = normalizeIdentifier(catName);
     connectorName = normalizeIdentifier(connectorName);
 
@@ -6585,9 +6585,9 @@ public class ObjectStore implements RawStore, Configurable {
         }
         ret.setRolePrivileges(dbRolePriv);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -6600,7 +6600,7 @@ public class ObjectStore implements RawStore, Configurable {
   public PrincipalPrivilegeSet getPartitionPrivilegeSet(String catName, String dbName,
       String tableName, String partition, String userName,
       List<String> groupNames) throws InvalidObjectException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     PrincipalPrivilegeSet ret = new PrincipalPrivilegeSet();
     tableName = normalizeIdentifier(tableName);
     dbName = normalizeIdentifier(dbName);
@@ -6631,9 +6631,9 @@ public class ObjectStore implements RawStore, Configurable {
         }
         ret.setRolePrivileges(partRolePriv);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -6644,7 +6644,7 @@ public class ObjectStore implements RawStore, Configurable {
   public PrincipalPrivilegeSet getTablePrivilegeSet(String catName, String dbName,
       String tableName, String userName, List<String> groupNames)
       throws InvalidObjectException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     PrincipalPrivilegeSet ret = new PrincipalPrivilegeSet();
     tableName = normalizeIdentifier(tableName);
     catName = normalizeIdentifier(catName);
@@ -6675,9 +6675,9 @@ public class ObjectStore implements RawStore, Configurable {
         }
         ret.setRolePrivileges(tableRolePriv);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -6694,7 +6694,7 @@ public class ObjectStore implements RawStore, Configurable {
     columnName = normalizeIdentifier(columnName);
     catName = normalizeIdentifier(catName);
 
-    boolean commited = false;
+    boolean committed = false;
     PrincipalPrivilegeSet ret = new PrincipalPrivilegeSet();
     try {
       openTransaction();
@@ -6721,9 +6721,9 @@ public class ObjectStore implements RawStore, Configurable {
         }
         ret.setRolePrivileges(columnRolePriv);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -7498,7 +7498,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   private List<MGlobalPrivilege> listPrincipalMGlobalGrants(String principalName,
       PrincipalType principalType, String authorizer) {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     List<MGlobalPrivilege> userNameDbPriv = new ArrayList<>();
     try {
@@ -7519,12 +7519,12 @@ public class ObjectStore implements RawStore, Configurable {
         }
         pm.retrieveAll(mPrivs);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
       if (mPrivs != null) {
         userNameDbPriv.addAll(mPrivs);
       }
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return userNameDbPriv;
   }
@@ -7555,17 +7555,17 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public List<HiveObjectPrivilege> listGlobalGrantsAll() {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
       query = pm.newQuery(MGlobalPrivilege.class);
       List<MGlobalPrivilege> userNameDbPriv = (List<MGlobalPrivilege>) query.execute();
       pm.retrieveAll(userNameDbPriv);
-      commited = commitTransaction();
+      committed = commitTransaction();
       return convertGlobal(userNameDbPriv);
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -10492,7 +10492,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public long cleanupEvents() {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     long delCnt;
     LOG.debug("Begin executing cleanupEvents");
@@ -10504,9 +10504,9 @@ public class ObjectStore implements RawStore, Configurable {
       query = pm.newQuery(MPartitionEvent.class, "curTime - eventTime > expiryTime");
       query.declareParameters("java.lang.Long curTime, java.lang.Long expiryTime");
       delCnt = query.deletePersistentAll(curTime, expiryTime);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
       LOG.debug("Done executing cleanupEvents");
     }
     return delCnt;
@@ -10820,7 +10820,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public void setMetaStoreSchemaVersion(String schemaVersion, String comment) throws MetaException {
     MVersionTable mSchemaVer;
-    boolean commited = false;
+    boolean committed = false;
     boolean recordVersion =
       MetastoreConf.getBoolVar(getConf(), ConfVars.SCHEMA_VERIFICATION_RECORD_VERSION);
     if (!recordVersion) {
@@ -10842,9 +10842,9 @@ public class ObjectStore implements RawStore, Configurable {
     try {
       openTransaction();
       pm.makePersistent(mSchemaVer);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -11021,7 +11021,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   private MFunction getMFunction(String catName, String db, String function) {
     MFunction mfunc = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -11034,31 +11034,31 @@ public class ObjectStore implements RawStore, Configurable {
       query.setUnique(true);
       mfunc = (MFunction) query.execute(function, db, catName);
       pm.retrieve(mfunc);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return mfunc;
   }
 
   @Override
   public Function getFunction(String catName, String dbName, String funcName) throws MetaException {
-    boolean commited = false;
+    boolean committed = false;
     Function func = null;
     Query query = null;
     try {
       openTransaction();
       func = convertToFunction(getMFunction(catName, dbName, funcName));
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return func;
   }
 
   @Override
   public List<Function> getAllFunctions(String catName) throws MetaException {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -11067,16 +11067,16 @@ public class ObjectStore implements RawStore, Configurable {
       query.declareParameters("java.lang.String catName");
       List<MFunction> allFunctions = (List<MFunction>) query.execute(catName);
       pm.retrieveAll(allFunctions);
-      commited = commitTransaction();
+      committed = commitTransaction();
       return convertToFunctions(allFunctions);
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
   @Override
   public List<String> getFunctions(String catName, String dbName, String pattern) throws MetaException {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     List<String> funcs = null;
     try {
@@ -11099,9 +11099,9 @@ public class ObjectStore implements RawStore, Configurable {
       for (Iterator i = names.iterator(); i.hasNext();) {
         funcs.add((String) i.next());
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return funcs;
   }
@@ -11325,7 +11325,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public NotificationEventResponse getNextNotification(NotificationEventRequest rqst) {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
 
     NotificationEventResponse result = new NotificationEventResponse();
@@ -11352,7 +11352,7 @@ public class ObjectStore implements RawStore, Configurable {
       query.setRange(0, maxEvents);
       Collection<MNotificationLog> events =
               (Collection) query.executeWithArray(parameterVals.toArray(new Object[0]));
-      commited = commitTransaction();
+      committed = commitTransaction();
       if (events == null) {
         return result;
       }
@@ -11362,13 +11362,13 @@ public class ObjectStore implements RawStore, Configurable {
       }
       return result;
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
   @Override
   public void cleanWriteNotificationEvents(int olderThan) {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -11412,16 +11412,16 @@ public class ObjectStore implements RawStore, Configurable {
             "minimum txnId {} (with eventTime {}) and maximum txnId {} (with eventTime {})",
             eventCount, tooOld, iteration, minTxnId, minEventTime, maxTxnId, maxEventTime);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
   @Override
   public List<WriteEventInfo> getAllWriteEventInfo(long txnId, String dbName, String tableName) throws MetaException {
     List<WriteEventInfo> writeEventInfoList = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -11438,7 +11438,7 @@ public class ObjectStore implements RawStore, Configurable {
       List<MTxnWriteNotificationLog> mplans = (List<MTxnWriteNotificationLog>)query.executeWithArray(
               parameterVals.toArray(new String[0]));
       pm.retrieveAll(mplans);
-      commited = commitTransaction();
+      committed = commitTransaction();
       if (mplans != null && mplans.size() > 0) {
         writeEventInfoList = Lists.newArrayList();
         for (MTxnWriteNotificationLog mplan : mplans) {
@@ -11451,7 +11451,7 @@ public class ObjectStore implements RawStore, Configurable {
         }
       }
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return writeEventInfoList;
   }
@@ -11551,7 +11551,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public void addNotificationEvent(NotificationEvent entry) throws MetaException {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       pm.flush();
@@ -11574,12 +11574,12 @@ public class ObjectStore implements RawStore, Configurable {
         pm.makePersistent(mNotificationNextId);
       }
       pm.makePersistent(translateThriftToDb(entry));
-      commited = commitTransaction();
+      committed = commitTransaction();
     } catch (MetaException e) {
       LOG.error("Couldn't get lock for update", e);
       throw e;
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -11672,7 +11672,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public CurrentNotificationEventId getCurrentNotificationEventId() {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -11682,17 +11682,17 @@ public class ObjectStore implements RawStore, Configurable {
       if (CollectionUtils.isNotEmpty(ids)) {
         id = ids.iterator().next().getNextEventId() - 1;
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
       return new CurrentNotificationEventId(id);
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
   @Override
   public NotificationEventsCountResponse getNotificationEventsCount(NotificationEventsCountRequest rqst) {
     Long result = 0L;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -11744,7 +11744,7 @@ public class ObjectStore implements RawStore, Configurable {
       query = pm.newQuery(queryStr);
       query.declareParameters(paramSpecs);
       result = (Long) query.executeWithArray(paramVals.toArray());
-      commited = commitTransaction();
+      committed = commitTransaction();
 
       // Cap the event count by limit if specified.
       long  eventCount = result.longValue();
@@ -11754,7 +11754,7 @@ public class ObjectStore implements RawStore, Configurable {
 
       return new NotificationEventsCountResponse(eventCount);
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -11850,7 +11850,7 @@ public class ObjectStore implements RawStore, Configurable {
   }
 
   private List<SQLPrimaryKey> getPrimaryKeysViaJdo(String catName, String dbName, String tblName) {
-    boolean commited = false;
+    boolean committed = false;
     List<SQLPrimaryKey> primaryKeys = null;
     Query query = null;
     try {
@@ -11880,15 +11880,15 @@ public class ObjectStore implements RawStore, Configurable {
         keyCol.setCatName(catName);
         primaryKeys.add(keyCol);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return primaryKeys;
   }
 
   private String getPrimaryKeyConstraintName(String catName, String dbName, String tblName) {
-    boolean commited = false;
+    boolean committed = false;
     String ret = null;
     Query query = null;
 
@@ -11907,9 +11907,9 @@ public class ObjectStore implements RawStore, Configurable {
         ret = currPK.getConstraintName();
         break;
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
      } finally {
-        rollbackAndCleanup(commited, query);
+        rollbackAndCleanup(committed, query);
      }
      return ret;
    }
@@ -11973,7 +11973,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   private List<SQLForeignKey> getForeignKeysViaJdo(String catName, String parentDbName,
       String parentTblName, String foreignDbName, String foreignTblName) {
-    boolean commited = false;
+    boolean committed = false;
     List<SQLForeignKey> foreignKeys = null;
     Collection<?> constraints = null;
     Query query = null;
@@ -12050,9 +12050,9 @@ public class ObjectStore implements RawStore, Configurable {
         fk.setCatName(catName);
         foreignKeys.add(fk);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return foreignKeys;
   }
@@ -12097,7 +12097,7 @@ public class ObjectStore implements RawStore, Configurable {
   }
 
   private List<SQLUniqueConstraint> getUniqueConstraintsViaJdo(String catName, String dbName, String tblName) {
-    boolean commited = false;
+    boolean committed = false;
     List<SQLUniqueConstraint> uniqueConstraints = null;
     Query query = null;
     try {
@@ -12121,9 +12121,9 @@ public class ObjectStore implements RawStore, Configurable {
             cols.get(currConstraint.getParentIntegerIndex()).getName(), currConstraint.getPosition(),
             currConstraint.getConstraintName(), enable, validate, rely));
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return uniqueConstraints;
   }
@@ -12222,7 +12222,7 @@ public class ObjectStore implements RawStore, Configurable {
   }
 
   private List<SQLCheckConstraint> getCheckConstraintsViaJdo(String catName, String dbName, String tblName) {
-    boolean commited = false;
+    boolean committed = false;
     List<SQLCheckConstraint> checkConstraints= null;
     Query query = null;
     try {
@@ -12247,9 +12247,9 @@ public class ObjectStore implements RawStore, Configurable {
                                                         currConstraint.getDefaultValue(),
                                                     currConstraint.getConstraintName(), enable, validate, rely));
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
       if (query != null) {
@@ -12260,7 +12260,7 @@ public class ObjectStore implements RawStore, Configurable {
   }
 
   private List<SQLDefaultConstraint> getDefaultConstraintsViaJdo(String catName, String dbName, String tblName) {
-    boolean commited = false;
+    boolean committed = false;
     List<SQLDefaultConstraint> defaultConstraints= null;
     Query query = null;
     try {
@@ -12286,9 +12286,9 @@ public class ObjectStore implements RawStore, Configurable {
             cols.get(currConstraint.getParentIntegerIndex()).getName(), currConstraint.getDefaultValue(),
             currConstraint.getConstraintName(), enable, validate, rely));
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
       if (query != null) {
@@ -12321,7 +12321,7 @@ public class ObjectStore implements RawStore, Configurable {
   }
 
   private List<SQLNotNullConstraint> getNotNullConstraintsViaJdo(String catName, String dbName, String tblName) {
-    boolean commited = false;
+    boolean committed = false;
     List<SQLNotNullConstraint> notNullConstraints = null;
     Query query = null;
     try {
@@ -12347,9 +12347,9 @@ public class ObjectStore implements RawStore, Configurable {
             cols.get(currConstraint.getParentIntegerIndex()).getName(),
             currConstraint.getConstraintName(), enable, validate, rely));
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return notNullConstraints;
   }
@@ -12947,7 +12947,7 @@ public class ObjectStore implements RawStore, Configurable {
   public void createResourcePlan(
       WMResourcePlan resourcePlan, String copyFromName, int defaultPoolSize)
       throws AlreadyExistsException, InvalidObjectException, MetaException, NoSuchObjectException {
-    boolean commited = false;
+    boolean committed = false;
     String rpName = normalizeIdentifier(resourcePlan.getName());
     if (rpName.isEmpty()) {
       throw new InvalidObjectException("Resource name cannot be empty.");
@@ -12986,14 +12986,14 @@ public class ObjectStore implements RawStore, Configurable {
           rp.setDefaultPool(defaultPool);
         }
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } catch (InvalidOperationException e) {
       throw new RuntimeException(e);
     } catch (Exception e) {
       checkForConstraintException(e, "Resource plan already exists: ");
       throw e;
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -13127,17 +13127,17 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public WMFullResourcePlan getResourcePlan(String name, String ns) throws NoSuchObjectException {
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       WMFullResourcePlan fullRp = fullFromMResourcePlan(getMWMResourcePlan(name, ns, false));
-      commited = commitTransaction();
+      committed = commitTransaction();
       return fullRp;
     } catch (InvalidOperationException e) {
       // Should not happen, edit check is false.
       throw new RuntimeException(e);
     } finally {
-      rollbackAndCleanup(commited, (Query)null);
+      rollbackAndCleanup(committed, (Query)null);
     }
   }
 
@@ -13149,7 +13149,7 @@ public class ObjectStore implements RawStore, Configurable {
   private MWMResourcePlan getMWMResourcePlan(String name, String ns, boolean editCheck, boolean mustExist)
       throws NoSuchObjectException, InvalidOperationException {
     MWMResourcePlan resourcePlan;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
 
     name = normalizeIdentifier(name);
@@ -13158,9 +13158,9 @@ public class ObjectStore implements RawStore, Configurable {
       ns = getNsOrDefault(ns);
       resourcePlan = (MWMResourcePlan) query.execute(name, ns);
       pm.retrieve(resourcePlan);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     if (mustExist && resourcePlan == null) {
       throw new NoSuchObjectException("There is no resource plan named: " + name + " in " + ns);
@@ -13183,7 +13183,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public List<WMResourcePlan> getAllResourcePlans(String ns) throws MetaException {
     List<WMResourcePlan> resourcePlans = new ArrayList();
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13191,14 +13191,14 @@ public class ObjectStore implements RawStore, Configurable {
       query.declareParameters("java.lang.String nsname");
       List<MWMResourcePlan> mplans = (List<MWMResourcePlan>) query.execute(getNsOrDefault(ns));
       pm.retrieveAll(mplans);
-      commited = commitTransaction();
+      committed = commitTransaction();
       if (mplans != null) {
         for (MWMResourcePlan mplan : mplans) {
           resourcePlans.add(fromMResourcePlan(mplan));
         }
       }
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return resourcePlans;
   }
@@ -13211,7 +13211,7 @@ public class ObjectStore implements RawStore, Configurable {
     if (isReplace && name == null) {
       throw new InvalidOperationException("Cannot replace without specifying the source plan");
     }
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     // This method only returns the result when activating a resource plan.
     // We could also add a boolean flag to be specified by the caller to see
@@ -13225,13 +13225,13 @@ public class ObjectStore implements RawStore, Configurable {
         result = handleSimpleAlter(name, ns, changes, canActivateDisabled, canDeactivate);
       }
 
-      commited = commitTransaction();
+      committed = commitTransaction();
       return result;
     } catch (Exception e) {
       checkForConstraintException(e, "Resource plan name should be unique: ");
       throw e;
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13358,7 +13358,7 @@ public class ObjectStore implements RawStore, Configurable {
   public WMFullResourcePlan getActiveResourcePlan(String ns) throws MetaException {
     // Note: fullFromMResroucePlan needs to be called inside the txn, otherwise we could have
     //       deduplicated this with getActiveMWMResourcePlan.
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     WMFullResourcePlan result = null;
     try {
@@ -13368,15 +13368,15 @@ public class ObjectStore implements RawStore, Configurable {
       if (mResourcePlan != null) {
         result = fullFromMResourcePlan(mResourcePlan);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return result;
   }
 
   private MWMResourcePlan getActiveMWMResourcePlan(String ns) {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     MWMResourcePlan result = null;
     try {
@@ -13384,9 +13384,9 @@ public class ObjectStore implements RawStore, Configurable {
       result = (MWMResourcePlan) query.execute(
           Status.ACTIVE.toString(), getNsOrDefault(ns));
       pm.retrieve(result);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return result;
   }
@@ -13462,7 +13462,7 @@ public class ObjectStore implements RawStore, Configurable {
   }
 
   private void deactivateActiveResourcePlan(String ns) {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       query = createActivePlanQuery();
@@ -13472,9 +13472,9 @@ public class ObjectStore implements RawStore, Configurable {
       if (mResourcePlan != null) {
         mResourcePlan.setStatus(Status.ENABLED);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13583,7 +13583,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public void dropResourcePlan(String name, String ns) throws NoSuchObjectException, MetaException {
     name = normalizeIdentifier(name);
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       query = createGetResourcePlanQuery();
@@ -13601,9 +13601,9 @@ public class ObjectStore implements RawStore, Configurable {
       pm.deletePersistentAll(resourcePlan.getMappings());
       pm.deletePersistentAll(resourcePlan.getPools());
       pm.deletePersistent(resourcePlan);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13611,7 +13611,7 @@ public class ObjectStore implements RawStore, Configurable {
   public void createWMTrigger(WMTrigger trigger)
       throws AlreadyExistsException, NoSuchObjectException, InvalidOperationException,
           MetaException {
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MWMResourcePlan resourcePlan = getMWMResourcePlan(
@@ -13621,19 +13621,19 @@ public class ObjectStore implements RawStore, Configurable {
           trigger.getActionExpression(), null,
           trigger.isSetIsInUnmanaged() && trigger.isIsInUnmanaged());
       pm.makePersistent(mTrigger);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } catch (Exception e) {
       checkForConstraintException(e, "Trigger already exists, use alter: ");
       throw e;
     } finally {
-      rollbackAndCleanup(commited, (Query)null);
+      rollbackAndCleanup(committed, (Query)null);
     }
   }
 
   @Override
   public void alterWMTrigger(WMTrigger trigger)
       throws NoSuchObjectException, InvalidOperationException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13650,16 +13650,16 @@ public class ObjectStore implements RawStore, Configurable {
       if (trigger.isSetIsInUnmanaged()) {
         mTrigger.setIsInUnmanaged(trigger.isIsInUnmanaged());
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
   private MWMTrigger getTrigger(MWMResourcePlan resourcePlan, String triggerName)
       throws NoSuchObjectException {
     triggerName = normalizeIdentifier(triggerName);
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13672,10 +13672,10 @@ public class ObjectStore implements RawStore, Configurable {
         throw new NoSuchObjectException("Cannot find trigger with name: " + triggerName);
       }
       pm.retrieve(mTrigger);
-      commited = commitTransaction();
+      committed = commitTransaction();
       return mTrigger;
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13685,7 +13685,7 @@ public class ObjectStore implements RawStore, Configurable {
     resourcePlanName = normalizeIdentifier(resourcePlanName);
     triggerName = normalizeIdentifier(triggerName);
 
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13695,9 +13695,9 @@ public class ObjectStore implements RawStore, Configurable {
       if (query.deletePersistentAll(resourcePlan, triggerName) != 1) {
         throw new NoSuchObjectException("Cannot delete trigger: " + triggerName);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13705,7 +13705,7 @@ public class ObjectStore implements RawStore, Configurable {
   public List<WMTrigger> getTriggersForResourcePlan(String resourcePlanName, String ns)
       throws NoSuchObjectException, MetaException {
     List<WMTrigger> triggers = new ArrayList();
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13720,14 +13720,14 @@ public class ObjectStore implements RawStore, Configurable {
       query.declareParameters("MWMResourcePlan rp");
       List<MWMTrigger> mTriggers = (List<MWMTrigger>) query.execute(resourcePlan);
       pm.retrieveAll(mTriggers);
-      commited = commitTransaction();
+      committed = commitTransaction();
       if (mTriggers != null) {
         for (MWMTrigger trigger : mTriggers) {
           triggers.add(fromMWMTrigger(trigger, resourcePlanName));
         }
       }
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return triggers;
   }
@@ -13746,7 +13746,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public void createPool(WMPool pool) throws AlreadyExistsException, NoSuchObjectException,
       InvalidOperationException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MWMResourcePlan resourcePlan = getMWMResourcePlan(
@@ -13762,19 +13762,19 @@ public class ObjectStore implements RawStore, Configurable {
       MWMPool mPool = new MWMPool(resourcePlan, pool.getPoolPath(), pool.getAllocFraction(),
           pool.getQueryParallelism(), policy);
       pm.makePersistent(mPool);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } catch (Exception e) {
       checkForConstraintException(e, "Pool already exists: ");
       throw e;
     } finally {
-      rollbackAndCleanup(commited, (Query)null);
+      rollbackAndCleanup(committed, (Query)null);
     }
   }
 
   @Override
   public void alterPool(WMNullablePool pool, String poolPath) throws AlreadyExistsException,
       NoSuchObjectException, InvalidOperationException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MWMResourcePlan resourcePlan = getMWMResourcePlan(
@@ -13803,16 +13803,16 @@ public class ObjectStore implements RawStore, Configurable {
         mPool.setPath(pool.getPoolPath());
       }
 
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, (Query)null);
+      rollbackAndCleanup(committed, (Query)null);
     }
   }
 
   private MWMPool getPool(MWMResourcePlan resourcePlan, String poolPath)
       throws NoSuchObjectException {
     poolPath = normalizeIdentifier(poolPath);
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13820,14 +13820,14 @@ public class ObjectStore implements RawStore, Configurable {
       query.declareParameters("MWMResourcePlan rp, java.lang.String poolPath");
       query.setUnique(true);
       MWMPool mPool = (MWMPool) query.execute(resourcePlan, poolPath);
-      commited = commitTransaction();
+      committed = commitTransaction();
       if (mPool == null) {
         throw new NoSuchObjectException("Cannot find pool: " + poolPath);
       }
       pm.retrieve(mPool);
       return mPool;
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13836,7 +13836,7 @@ public class ObjectStore implements RawStore, Configurable {
     if (!poolParentExists(resourcePlan, newPoolPath)) {
       throw new NoSuchObjectException("Pool path is invalid, the parent does not exist");
     }
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     openTransaction();
     try {
@@ -13847,9 +13847,9 @@ public class ObjectStore implements RawStore, Configurable {
       for (MWMPool pool : descPools) {
         pool.setPath(newPoolPath + pool.getPath().substring(path.length()));
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13878,7 +13878,7 @@ public class ObjectStore implements RawStore, Configurable {
   public void dropWMPool(String resourcePlanName, String poolPath, String ns)
       throws NoSuchObjectException, InvalidOperationException, MetaException {
     poolPath = normalizeIdentifier(poolPath);
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13895,19 +13895,19 @@ public class ObjectStore implements RawStore, Configurable {
       if (query.deletePersistentAll(resourcePlan, poolPath) != 1) {
         throw new NoSuchObjectException("Cannot delete pool: " + poolPath);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } catch(Exception e) {
       if (getConstraintException(e) != null) {
         throw new InvalidOperationException("Please remove all mappings for this pool.");
       }
       throw e;
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
   private boolean poolHasChildren(MWMResourcePlan resourcePlan, String poolPath) {
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13916,10 +13916,10 @@ public class ObjectStore implements RawStore, Configurable {
       query.setResult("count(this)");
       query.setUnique(true);
       Long count = (Long) query.execute(resourcePlan, poolPath + ".");
-      commited = commitTransaction();
+      committed = commitTransaction();
       return count != null && count > 0;
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13929,7 +13929,7 @@ public class ObjectStore implements RawStore, Configurable {
       MetaException {
     EntityType entityType = EntityType.valueOf(mapping.getEntityType().trim().toUpperCase());
     String entityName = normalizeIdentifier(mapping.getEntityName());
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13953,9 +13953,9 @@ public class ObjectStore implements RawStore, Configurable {
             resourcePlan, entityType.toString(), entityName);
         mMapping.setPool(pool);
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13964,7 +13964,7 @@ public class ObjectStore implements RawStore, Configurable {
       throws NoSuchObjectException, InvalidOperationException, MetaException {
     String entityType = mapping.getEntityType().trim().toUpperCase();
     String entityName = normalizeIdentifier(mapping.getEntityName());
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -13976,9 +13976,9 @@ public class ObjectStore implements RawStore, Configurable {
       if (query.deletePersistentAll(resourcePlan, entityType, entityName) != 1) {
         throw new NoSuchObjectException("Cannot delete mapping.");
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
   }
 
@@ -13986,7 +13986,7 @@ public class ObjectStore implements RawStore, Configurable {
   public void createWMTriggerToPoolMapping(String resourcePlanName, String triggerName,
       String poolPath, String ns) throws AlreadyExistsException, NoSuchObjectException,
       InvalidOperationException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MWMResourcePlan resourcePlan = getMWMResourcePlan(resourcePlanName, ns, true);
@@ -13996,16 +13996,16 @@ public class ObjectStore implements RawStore, Configurable {
       trigger.getPools().add(pool);
       pm.makePersistent(pool);
       pm.makePersistent(trigger);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, (Query)null);
+      rollbackAndCleanup(committed, (Query)null);
     }
   }
 
   @Override
   public void dropWMTriggerToPoolMapping(String resourcePlanName, String triggerName,
       String poolPath, String ns) throws NoSuchObjectException, InvalidOperationException, MetaException {
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MWMResourcePlan resourcePlan = getMWMResourcePlan(resourcePlanName, ns, true);
@@ -14015,9 +14015,9 @@ public class ObjectStore implements RawStore, Configurable {
       trigger.getPools().remove(pool);
       pm.makePersistent(pool);
       pm.makePersistent(trigger);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, (Query)null);
+      rollbackAndCleanup(committed, (Query)null);
     }
   }
 
@@ -14184,7 +14184,7 @@ public class ObjectStore implements RawStore, Configurable {
   public ScheduledQueryPollResponse scheduledQueryPoll(ScheduledQueryPollRequest request) throws MetaException {
     ensureScheduledQueriesEnabled();
     String namespace = request.getClusterNamespace();
-    boolean commited = false;
+    boolean committed = false;
     ScheduledQueryPollResponse ret = new ScheduledQueryPollResponse();
     Query q = null;
     try {
@@ -14212,7 +14212,7 @@ public class ObjectStore implements RawStore, Configurable {
       pm.makePersistent(execution);
       pm.makePersistent(schq);
       ObjectStoreTestHook.onScheduledQueryPoll();
-      commited = commitTransaction();
+      committed = commitTransaction();
       ret.setScheduleKey(schq.getScheduleKey());
       ret.setQuery("/* schedule: " + schq.getScheduleName() + " */" + schq.getQuery());
       ret.setUser(schq.getUser());
@@ -14220,12 +14220,12 @@ public class ObjectStore implements RawStore, Configurable {
       ret.setExecutionId(executionId);
     } catch (JDOException e) {
       LOG.debug("Caught jdo exception; exclusive", e);
-      commited = false;
+      committed = false;
     } finally {
       if (q != null) {
         q.closeAll();
       }
-      if (commited) {
+      if (committed) {
         return ret;
       } else {
         rollbackTransaction();
@@ -14237,7 +14237,7 @@ public class ObjectStore implements RawStore, Configurable {
   @Override
   public void scheduledQueryProgress(ScheduledQueryProgressInfo info) throws InvalidOperationException, MetaException {
     ensureScheduledQueriesEnabled();
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       MScheduledExecution execution = pm.getObjectById(MScheduledExecution.class, info.getScheduledExecutionId());
@@ -14271,9 +14271,9 @@ public class ObjectStore implements RawStore, Configurable {
 
       processScheduledQueryPolicies(info);
 
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -14292,7 +14292,7 @@ public class ObjectStore implements RawStore, Configurable {
       return;
     }
 
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
 
@@ -14339,11 +14339,11 @@ public class ObjectStore implements RawStore, Configurable {
           schq.setNextExecution(scheduledTime);
         }
       }
-      commited = commitTransaction();
+      committed = commitTransaction();
     } catch (InvalidInputException e) {
       throw new MetaException("Unexpected InvalidInputException: " + e.getMessage());
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -14364,7 +14364,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   @Override
   public void addReplicationMetrics(ReplicationMetricList replicationMetricList) {
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       List<MReplicationMetrics> mReplicationMetricsList = new ArrayList<>();
@@ -14389,9 +14389,9 @@ public class ObjectStore implements RawStore, Configurable {
         mReplicationMetricsList.add(mReplicationMetrics);
       }
       pm.makePersistentAll(mReplicationMetricsList);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -14551,7 +14551,7 @@ public class ObjectStore implements RawStore, Configurable {
   public void scheduledQueryInsert(ScheduledQuery scheduledQuery)
       throws NoSuchObjectException, AlreadyExistsException, InvalidInputException {
     MScheduledQuery schq = MScheduledQuery.fromThrift(scheduledQuery);
-    boolean commited = false;
+    boolean committed = false;
     try {
       Optional<MScheduledQuery> existing = getMScheduledQuery(scheduledQuery.getScheduleKey());
       if (existing.isPresent()) {
@@ -14562,9 +14562,9 @@ public class ObjectStore implements RawStore, Configurable {
       Integer nextExecutionTime = computeNextExecutionTime(schq.getSchedule());
       schq.setNextExecution(nextExecutionTime);
       pm.makePersistent(schq);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -14572,7 +14572,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   public void scheduledQueryDelete(ScheduledQuery scheduledQuery) throws NoSuchObjectException, AlreadyExistsException {
     MScheduledQuery schq = MScheduledQuery.fromThrift(scheduledQuery);
-    boolean commited = false;
+    boolean committed = false;
     try {
       openTransaction();
       Optional<MScheduledQuery> existing = getMScheduledQuery(scheduledQuery.getScheduleKey());
@@ -14582,9 +14582,9 @@ public class ObjectStore implements RawStore, Configurable {
       }
       MScheduledQuery persisted = existing.get();
       pm.deletePersistent(persisted);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -14593,7 +14593,7 @@ public class ObjectStore implements RawStore, Configurable {
   public void scheduledQueryUpdate(ScheduledQuery scheduledQuery)
       throws NoSuchObjectException, AlreadyExistsException, InvalidInputException {
     MScheduledQuery schq = MScheduledQuery.fromThrift(scheduledQuery);
-    boolean commited = false;
+    boolean committed = false;
     try {
       Optional<MScheduledQuery> existing = getMScheduledQuery(scheduledQuery.getScheduleKey());
       if (!existing.isPresent()) {
@@ -14610,9 +14610,9 @@ public class ObjectStore implements RawStore, Configurable {
         persisted.setNextExecution(schq.getNextExecution());
       }
       pm.makePersistent(persisted);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      if (!commited) {
+      if (!committed) {
         rollbackTransaction();
       }
     }
@@ -14635,7 +14635,7 @@ public class ObjectStore implements RawStore, Configurable {
 
   public Optional<MScheduledQuery> getMScheduledQuery(ScheduledQueryKey key) {
     MScheduledQuery s = null;
-    boolean commited = false;
+    boolean committed = false;
     Query query = null;
     try {
       openTransaction();
@@ -14644,9 +14644,9 @@ public class ObjectStore implements RawStore, Configurable {
       query.setUnique(true);
       s = (MScheduledQuery) query.execute(key.getScheduleName(), key.getClusterNamespace());
       pm.retrieve(s);
-      commited = commitTransaction();
+      committed = commitTransaction();
     } finally {
-      rollbackAndCleanup(commited, query);
+      rollbackAndCleanup(committed, query);
     }
     return Optional.ofNullable(s);
   }
