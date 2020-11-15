@@ -2425,7 +2425,7 @@ public class TestLlapTaskSchedulerService {
             while (!shouldRun) {
               triggerRunCondition.await();
             }
-            // Preven subsequent runs until a new trigger is set.
+            // Prevent subsequent runs until a new trigger is set.
             shouldRun = false;
           } finally {
             lock.unlock();
