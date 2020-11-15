@@ -489,9 +489,9 @@ public class RelOptHiveTable implements RelOptTable {
 
   private void updateColStats(Set<Integer> projIndexLst, boolean allowMissingStats) {
     List<String> nonPartColNamesThatRqrStats = new ArrayList<String>();
-    List<Integer> nonPartColIndexsThatRqrStats = new ArrayList<Integer>();
+    List<Integer> nonPartColIndexesThatRqrStats = new ArrayList<Integer>();
     List<String> partColNamesThatRqrStats = new ArrayList<String>();
-    List<Integer> partColIndexsThatRqrStats = new ArrayList<Integer>();
+    List<Integer> partColIndexesThatRqrStats = new ArrayList<Integer>();
     Set<String> colNamesFailedStats = new HashSet<String>();
 
     // 1. Separate required columns to Non Partition and Partition Cols
@@ -500,10 +500,10 @@ public class RelOptHiveTable implements RelOptTable {
       if (hiveColStatsMap.get(pi) == null) {
         if ((tmp = hiveNonPartitionColsMap.get(pi)) != null) {
           nonPartColNamesThatRqrStats.add(tmp.getInternalName());
-          nonPartColIndexsThatRqrStats.add(pi);
+          nonPartColIndexesThatRqrStats.add(pi);
         } else if ((tmp = hivePartitionColsMap.get(pi)) != null) {
           partColNamesThatRqrStats.add(tmp.getInternalName());
-          partColIndexsThatRqrStats.add(pi);
+          partColIndexesThatRqrStats.add(pi);
         } else {
           noColsMissingStats.getAndIncrement();
           String logMsg = "Unable to find Column Index: " + pi + ", in "
@@ -562,7 +562,7 @@ public class RelOptHiveTable implements RelOptTable {
           } else {
             // Column stats in hiveColStats might not be in the same order as the columns in
             // nonPartColNamesThatRqrStats. reorder hiveColStats so we can build hiveColStatsMap
-            // using nonPartColIndexsThatRqrStats as below
+            // using nonPartColIndexesThatRqrStats as below
             Map<String, ColStatistics> columnStatsMap =
                 new HashMap<String, ColStatistics>(hiveColStats.size());
             for (ColStatistics cs : hiveColStats) {
@@ -595,7 +595,7 @@ public class RelOptHiveTable implements RelOptTable {
               hiveColStats.add(
                   new ColStatistics(
                       nonPartColNamesThatRqrStats.get(i),
-                      hiveNonPartitionColsMap.get(nonPartColIndexsThatRqrStats.get(i)).getTypeName()));
+                      hiveNonPartitionColsMap.get(nonPartColIndexesThatRqrStats.get(i)).getTypeName()));
             }
             colNamesFailedStats.clear();
             colStatsCached.updateState(State.COMPLETE);
@@ -627,9 +627,9 @@ public class RelOptHiveTable implements RelOptTable {
 
       if (hiveColStats != null && hiveColStats.size() == nonPartColNamesThatRqrStats.size()) {
         for (int i = 0; i < hiveColStats.size(); i++) {
-          // the columns in nonPartColIndexsThatRqrStats/nonPartColNamesThatRqrStats/hiveColStats
+          // the columns in nonPartColIndexesThatRqrStats/nonPartColNamesThatRqrStats/hiveColStats
           // are in same order
-          hiveColStatsMap.put(nonPartColIndexsThatRqrStats.get(i), hiveColStats.get(i));
+          hiveColStatsMap.put(nonPartColIndexesThatRqrStats.get(i), hiveColStats.get(i));
           colStatsCached.put(hiveColStats.get(i).getColumnName(), hiveColStats.get(i));
           if (LOG.isDebugEnabled()) {
             LOG.debug("Stats for column " + hiveColStats.get(i).getColumnName() +
@@ -644,9 +644,9 @@ public class RelOptHiveTable implements RelOptTable {
     if (colNamesFailedStats.isEmpty() && !partColNamesThatRqrStats.isEmpty()) {
       ColStatistics cStats = null;
       for (int i = 0; i < partColNamesThatRqrStats.size(); i++) {
-        cStats = StatsUtils.getColStatsForPartCol(hivePartitionColsMap.get(partColIndexsThatRqrStats.get(i)),
+        cStats = StatsUtils.getColStatsForPartCol(hivePartitionColsMap.get(partColIndexesThatRqrStats.get(i)),
             new PartitionIterable(partitionList.getNotDeniedPartns()), hiveConf);
-        hiveColStatsMap.put(partColIndexsThatRqrStats.get(i), cStats);
+        hiveColStatsMap.put(partColIndexesThatRqrStats.get(i), cStats);
         colStatsCached.put(cStats.getColumnName(), cStats);
         if (LOG.isDebugEnabled()) {
           LOG.debug("Stats for column " + cStats.getColumnName() +
