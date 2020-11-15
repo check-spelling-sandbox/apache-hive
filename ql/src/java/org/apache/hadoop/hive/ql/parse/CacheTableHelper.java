@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  *
  * Because this class is only responsible for cache population, it is not a requirement for
  * a caller to supply all the tables necessary for the query. It is also not a requirement
- * for the tables to be part of the query. Of course, the query qill benefit if those
+ * for the tables to be part of the query. Of course, the query will benefit if those
  * conditions were true, but if the table is not in the cache, a later call fetching the writeids
  * will hit the HMS server and will not fail.
  *
