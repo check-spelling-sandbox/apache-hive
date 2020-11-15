@@ -494,7 +494,7 @@ public class Driver implements IDriver {
    */
   @VisibleForTesting
   public void compile(String command, boolean resetTaskIds, boolean deferClose) throws CommandProcessorException {
-    preparForCompile(resetTaskIds);
+    prepareForCompile(resetTaskIds);
 
     Compiler compiler = new Compiler(context, driverContext, driverState);
     QueryPlan plan = compiler.compile(command, deferClose);
@@ -503,7 +503,7 @@ public class Driver implements IDriver {
     compileFinished(deferClose);
   }
 
-  private void preparForCompile(boolean resetTaskIds) throws CommandProcessorException {
+  private void prepareForCompile(boolean resetTaskIds) throws CommandProcessorException {
     driverTxnHandler.createTxnManager();
     DriverState.setDriverState(driverState);
     prepareContext();
