@@ -100,7 +100,7 @@ public abstract class NonCatCallsWithCatalog {
     conf = MetastoreConf.newMetastoreConf();
     MetastoreConf.setBoolVar(this.conf, ConfVars.HIVE_IN_TEST, true);
     MetastoreConf.setVar(conf, ConfVars.METASTORE_METADATA_TRANSFORMER_CLASS, " ");
-    MetaStoreTestUtils.setConfForStandloneMode(conf);
+    MetaStoreTestUtils.setConfForStandaloneMode(conf);
 
     // Get new client
     client = getClient();
