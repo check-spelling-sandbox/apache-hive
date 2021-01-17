@@ -3083,7 +3083,7 @@ private void constructOneLBLocationMap(FileStatus fSta,
       List<String> partitionNames = new LinkedList<>();
       for(PartitionDetails details : partitionDetailsMap.values()) {
         if (details.fullSpec != null && !details.fullSpec.isEmpty()) {
-          partitionNames.add(Warehouse.makeDynamicPartNameNoTrailingSeperator(details.fullSpec));
+          partitionNames.add(Warehouse.makeDynamicPartNameNoTrailingSeparator(details.fullSpec));
         }
       }
       List<Partition> partitions = Hive.get().getPartitionsByNames(tbl, partitionNames);
