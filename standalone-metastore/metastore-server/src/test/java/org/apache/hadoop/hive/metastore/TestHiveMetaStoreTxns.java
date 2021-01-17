@@ -453,7 +453,7 @@ public class TestHiveMetaStoreTxns {
     conf = MetastoreConf.newMetastoreConf();
     MetastoreConf.setVar(conf, ConfVars.METASTORE_METADATA_TRANSFORMER_CLASS, " ");
     conf.setBoolean(ConfVars.HIVE_IN_TEST.getVarname(), true);
-    MetaStoreTestUtils.setConfForStandloneMode(conf);
+    MetaStoreTestUtils.setConfForStandaloneMode(conf);
     TestTxnDbUtil.setConfValues(conf);
     TestTxnDbUtil.prepDb(conf);
     client = new HiveMetaStoreClient(conf);
