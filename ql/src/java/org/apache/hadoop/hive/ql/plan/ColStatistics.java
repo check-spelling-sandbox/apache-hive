@@ -22,7 +22,7 @@ public class ColStatistics {
 
   private String colName;
   private String colType;
-  private long countDistint;
+  private long countDistinct;
   private long numNulls;
   private double avgColLen;
   private long numTrues;
@@ -60,12 +60,12 @@ public class ColStatistics {
     this.colType = colType;
   }
 
-  public long getCountDistint() {
-    return countDistint;
+  public long getCountDistinct() {
+    return countDistinct;
   }
 
-  public void setCountDistint(long countDistint) {
-    this.countDistint = countDistint;
+  public void setCountDistinct(long countDistinct) {
+    this.countDistinct = countDistinct;
   }
 
   public long getNumNulls() {
@@ -128,7 +128,7 @@ public class ColStatistics {
     sb.append(" colType: ");
     sb.append(colType);
     sb.append(" countDistincts: ");
-    sb.append(countDistint);
+    sb.append(countDistinct);
     sb.append(" numNulls: ");
     sb.append(numNulls);
     sb.append(" avgColLen: ");
@@ -153,7 +153,7 @@ public class ColStatistics {
   public ColStatistics clone() {
     ColStatistics clone = new ColStatistics(colName, colType);
     clone.setAvgColLen(avgColLen);
-    clone.setCountDistint(countDistint);
+    clone.setCountDistinct(countDistinct);
     clone.setNumNulls(numNulls);
     clone.setNumTrues(numTrues);
     clone.setNumFalses(numFalses);
