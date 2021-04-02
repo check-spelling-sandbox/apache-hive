@@ -161,7 +161,7 @@ public class TestHadoop23Shims {
   }
 
   @Test
-  public void testPreserveOptionsOverwritenByUser() throws Exception {
+  public void testPreserveOptionsOverriddenByUser() throws Exception {
     Configuration conf = new Configuration();
     conf.set("distcp.options.pbx", "");
     Path copySrc = getMockedPath(false);
