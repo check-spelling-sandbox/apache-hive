@@ -264,7 +264,7 @@ class VectorSpillBlockContainer {
         for (int logicalIndex = 0; logicalIndex < size; logicalIndex++) {
           final int batchIndex = (selectedInUse ? selected[logicalIndex] : logicalIndex);
 
-          Output output = rowBytesContainer.getOuputForRowBytes();
+          Output output = rowBytesContainer.getOutputForRowBytes();
           vectorSerializeRow.setOutputAppend(output);
           vectorSerializeRow.serializeWrite(batch, batchIndex);
           rowBytesContainer.finishRow();
