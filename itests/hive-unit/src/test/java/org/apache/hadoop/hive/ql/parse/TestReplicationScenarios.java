@@ -4670,7 +4670,7 @@ public class TestReplicationScenarios {
     run("CREATE TABLE " + dbName + ".ptned(a string) partitioned by (b int) STORED AS TEXTFILE", driver);
     ArrayList<String> partitions = new ArrayList<>();
 
-    // Create around 10 partitoins.
+    // Create around 10 partitions.
     for (int i = 0; i < 10; i++) {
       run("ALTER TABLE " + dbName + ".ptned ADD PARTITION(b=" + i + ")", driver);
       partitions.add("b=" + i);
@@ -4723,7 +4723,7 @@ public class TestReplicationScenarios {
     for (int i = 0; i < 10; i++) {
       run("CREATE TABLE " + dbName + ".ptned" + i + "(a string) partitioned by (b int) STORED AS TEXTFILE", driver);
       for (int j = 0; j < 5; j++) {
-        // Create 5 partitoins per table.
+        // Create 5 partitions per table.
         run("ALTER TABLE " + dbName + ".ptned" + i + " ADD PARTITION(b=" + j + ")", driver);
       }
     }
