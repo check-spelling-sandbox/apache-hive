@@ -1314,8 +1314,8 @@ public abstract class AbstractThriftHiveMetastore implements Iface {
     }
 
     @Override
-    public WMGetTriggersForResourePlanResponse get_triggers_for_resourceplan(
-            WMGetTriggersForResourePlanRequest request) throws NoSuchObjectException, MetaException, TException {
+    public WMGetTriggersForResourcePlanResponse get_triggers_for_resourceplan(
+            WMGetTriggersForResourcePlanRequest request) throws NoSuchObjectException, MetaException, TException {
         throw new UnsupportedOperationException("this method is not supported");
     }
 
