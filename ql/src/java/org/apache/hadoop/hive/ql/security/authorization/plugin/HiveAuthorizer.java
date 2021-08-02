@@ -129,12 +129,12 @@ public interface HiveAuthorizer {
    * @param hivePrincipals
    * @param roles
    * @param grantOption
-   * @param grantorPrinc
+   * @param grantorPrincipal
    * @throws HiveAuthzPluginException
    * @throws HiveAccessControlException
    */
   void grantRole(List<HivePrincipal> hivePrincipals, List<String> roles, boolean grantOption,
-      HivePrincipal grantorPrinc)
+      HivePrincipal grantorPrincipal)
       throws HiveAuthzPluginException, HiveAccessControlException;
 
 
@@ -143,12 +143,12 @@ public interface HiveAuthorizer {
    * @param hivePrincipals
    * @param roles
    * @param grantOption
-   * @param grantorPrinc
+   * @param grantorPrincipal
    * @throws HiveAuthzPluginException
    * @throws HiveAccessControlException
    */
   void revokeRole(List<HivePrincipal> hivePrincipals, List<String> roles, boolean grantOption,
-      HivePrincipal grantorPrinc)
+      HivePrincipal grantorPrincipal)
       throws HiveAuthzPluginException, HiveAccessControlException;
 
   /**
