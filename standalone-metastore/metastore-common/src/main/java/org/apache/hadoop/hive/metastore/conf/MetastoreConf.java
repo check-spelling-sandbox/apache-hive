@@ -1018,7 +1018,7 @@ public class MetastoreConf {
     SCHEDULED_QUERIES_SKIP_OPPORTUNITIES_AFTER_FAILURES(
         "metastore.scheduled.queries.skip.opportunities.after.failures",
         "metastore.scheduled.queries.skip.opportunities.after.failures", 0,
-        "Causes to skip schedule opportunities after consecutive failures; taking into account the last N executions. For a scheduled query which have failed its last f execution; it's next schedule will be set to skip f-1 schedule opportunitites."
+        "Causes to skip schedule opportunities after consecutive failures; taking into account the last N executions. For a scheduled query which have failed its last f execution; it's next schedule will be set to skip f-1 schedule opportunities."
             + "Suppose that a scheduled query is scheduled to run every minute.\n"
             + "Consider this setting to be set to 3 - which means it will only look at the last 3 executions."
             + "In case the query failed at 1:00 then it will skip 0 opportunities; and the next execution will be scheduled to 1:01\n"
