@@ -77,7 +77,7 @@ public class TestHiveCommits extends HiveTableBaseTest {
   }
 
   /**
-   * Pretends we throw an error while persisting that actually fails to commit serverside
+   * Pretends we throw an error while persisting that actually fails to commit server-side
    */
   @Test
   public void testThriftExceptionFailureOnCommit() throws TException, InterruptedException {
@@ -114,7 +114,7 @@ public class TestHiveCommits extends HiveTableBaseTest {
   }
 
   /**
-   * Pretends we throw an error while persisting that actually does commit serverside
+   * Pretends we throw an error while persisting that actually does commit server-side
    */
   @Test
   public void testThriftExceptionSuccessOnCommit() throws TException, InterruptedException {
