@@ -474,7 +474,7 @@ public class TestVectorPTFGroupBatches {
   }
 
   @Test
-  public void testFindInmemoryBatchIndex(){
+  public void testFindInMemoryBatchIndex(){
     VectorPTFGroupBatches batches = new VectorPTFGroupBatches(new Configuration(), 2);
     batches.currentBufferedBatchCount = 2;
     batches.inMemoryStartRowIndex = Arrays.asList(7, 9, 10);
