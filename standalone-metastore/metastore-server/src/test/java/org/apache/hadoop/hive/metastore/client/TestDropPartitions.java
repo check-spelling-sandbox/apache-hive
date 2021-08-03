@@ -231,7 +231,7 @@ public class TestDropPartitions extends MetaStoreClientTest {
   @Test(expected = NoSuchObjectException.class)
   public void testDropPartitionNonExistingDB() throws Exception {
 
-    client.dropPartition("nonexistentdb", TABLE_NAME, Lists.newArrayList("2017"), false);
+    client.dropPartition("nonexistent_db", TABLE_NAME, Lists.newArrayList("2017"), false);
   }
 
   @Test(expected = NoSuchObjectException.class)
@@ -475,7 +475,7 @@ public class TestDropPartitions extends MetaStoreClientTest {
   @Test(expected = NoSuchObjectException.class)
   public void testDropPartitionByNameNonExistingDB() throws Exception {
 
-    client.dropPartition("nonexistentdb", TABLE_NAME, "year=2017/month=may", true);
+    client.dropPartition("nonexistent_db", TABLE_NAME, "year=2017/month=may", true);
   }
 
   @Test(expected = NoSuchObjectException.class)

@@ -326,7 +326,7 @@ public class TestExchangePartitions extends MetaStoreClientTest {
   public void testExchangePartitionsNonExistingSourceDB() throws Exception {
 
     Map<String, String> partitionSpecs = getPartitionSpec(partitions[1]);
-    client.exchange_partitions(partitionSpecs, "nonexistentdb", sourceTable.getTableName(),
+    client.exchange_partitions(partitionSpecs, "nonexistent_db", sourceTable.getTableName(),
         destTable.getDbName(), destTable.getTableName());
   }
 
@@ -343,7 +343,7 @@ public class TestExchangePartitions extends MetaStoreClientTest {
 
     Map<String, String> partitionSpecs = getPartitionSpec(partitions[1]);
     client.exchange_partitions(partitionSpecs, sourceTable.getDbName(), sourceTable.getTableName(),
-        "nonexistentdb", destTable.getTableName());
+        "nonexistent_db", destTable.getTableName());
   }
 
   @Test(expected = MetaException.class)
@@ -849,7 +849,7 @@ public class TestExchangePartitions extends MetaStoreClientTest {
   public void testExchangePartitionNonExistingSourceDB() throws Exception {
 
     Map<String, String> partitionSpecs = getPartitionSpec(partitions[1]);
-    client.exchange_partition(partitionSpecs, "nonexistentdb", sourceTable.getTableName(),
+    client.exchange_partition(partitionSpecs, "nonexistent_db", sourceTable.getTableName(),
         destTable.getDbName(), destTable.getTableName());
   }
 
@@ -866,7 +866,7 @@ public class TestExchangePartitions extends MetaStoreClientTest {
 
     Map<String, String> partitionSpecs = getPartitionSpec(partitions[1]);
     client.exchange_partition(partitionSpecs, sourceTable.getDbName(), sourceTable.getTableName(),
-        "nonexistentdb", destTable.getTableName());
+        "nonexistent_db", destTable.getTableName());
   }
 
   @Test(expected = MetaException.class)
