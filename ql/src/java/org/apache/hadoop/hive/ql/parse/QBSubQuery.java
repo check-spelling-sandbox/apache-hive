@@ -56,7 +56,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
       }
 
       switch(opNode.getType()) {
-        // opNode's type is always either KW_EXISTS or KW_IN never NOTEXISTS or NOTIN
+        // opNode's type is always either KW_EXISTS or KW_IN never NONEXISTENT or NOTIN
         //  to figure this out we need to check it's grand parent's parent
       case HiveParser.KW_EXISTS:
         if(opNode.getParent().getParent().getParent() != null
@@ -64,7 +64,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
           return NOT_EXISTS;
         }
         return EXISTS;
-      case HiveParser.TOK_SUBQUERY_OP_NOTEXISTS:
+      case HiveParser.TOK_SUBQUERY_OP_NONEXISTENT:
         return NOT_EXISTS;
       case HiveParser.KW_IN:
         if(opNode.getParent().getParent().getParent() != null

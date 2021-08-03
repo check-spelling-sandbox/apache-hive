@@ -205,7 +205,7 @@ public class SubQueryUtils {
           // ImmutableCommonToken, whose type cannot be modified.
           if (sqOpType.getType() == HiveParser.KW_EXISTS) {
             newSqOpType = new ASTNode(new CommonToken(
-                HiveParser.TOK_SUBQUERY_OP_NOTEXISTS, "TOK_SUBQUERY_OP_NOTEXISTS"));
+                HiveParser.TOK_SUBQUERY_OP_NONEXISTENT, "TOK_SUBQUERY_OP_NONEXISTENT"));
           } else {
             newSqOpType = new ASTNode(new CommonToken(
                 HiveParser.TOK_SUBQUERY_OP_NOTIN, "TOK_SUBQUERY_OP_NOTIN"));

@@ -1537,7 +1537,7 @@ public class TypeCheckProcFactory<T> {
           || subqueryOp.getChild(0).getType() == HiveParser.TOK_SUBQUERY_OP_NOTIN)) {
         subqueryType = SubqueryType.IN;
       } else if ((subqueryOp.getChildCount() > 0) && (subqueryOp.getChild(0).getType() == HiveParser.KW_EXISTS
-          || subqueryOp.getChild(0).getType() == HiveParser.TOK_SUBQUERY_OP_NOTEXISTS)) {
+          || subqueryOp.getChild(0).getType() == HiveParser.TOK_SUBQUERY_OP_NONEXISTENT)) {
         subqueryType = SubqueryType.EXISTS;
       } else if ((subqueryOp.getChildCount() > 0) && (subqueryOp.getChild(0).getType() == HiveParser.KW_SOME)) {
         subqueryType = SubqueryType.SOME;
