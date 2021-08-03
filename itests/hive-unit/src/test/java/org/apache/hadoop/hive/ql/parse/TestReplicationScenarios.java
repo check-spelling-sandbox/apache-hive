@@ -4691,7 +4691,7 @@ public class TestReplicationScenarios {
 
     appender.reset();
 
-    // Do an incremntal load and see the partitions got deleted and the normal drop partition flow was used.
+    // Do an incremental load and see the partitions got deleted and the normal drop partition flow was used.
     Tuple incrementalDump = incrementalLoadAndVerify(dbName, replDbName);
     assertTrue(appender.getOutput().contains("Replication calling normal drop partitions for regular partition drops"));
     assertTrue(appender.getOutput().contains("Dropped 3 partitions for replication."));
