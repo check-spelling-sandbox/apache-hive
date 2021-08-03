@@ -589,7 +589,7 @@ struct FileMetadata {
   3: list<binary> data
 }
 
-// this field can be used to store repeatitive information
+// this field can be used to store repetitive information
 // (like network addresses in filemetadata). Instead of
 // sending the same object repeatedly, we can send the indices
 // corresponding to the object in this list.
