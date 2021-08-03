@@ -282,7 +282,7 @@ public class DirCopyTask extends Task<DirCopyWork> implements Serializable {
       Path snapRelPath =
           new Path(sourcePath, HdfsConstants.DOT_SNAPSHOT_DIR + "/" + secondSnapshot(work.getSnapshotPrefix()));
 
-      // This is the first time we are copying, check if the target is snapshottable or not, if not attempt to allow
+      // This is the first time we are copying, check if the target is snapshotable or not, if not attempt to allow
       // snapshots.
       SnapshotUtils.allowSnapshot(targetFs, work.getFullyQualifiedTargetPath(), clonedConf);
       // Attempt to delete the snapshot, in case this is a bootstrap post a failed incremental, Since in case of

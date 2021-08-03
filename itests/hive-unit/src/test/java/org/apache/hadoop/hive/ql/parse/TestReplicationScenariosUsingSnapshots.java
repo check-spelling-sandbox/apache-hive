@@ -98,7 +98,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
     SnapshottableDirectoryStatus[] snaps =
         primary.miniDFSCluster.getFileSystem().getSnapshottableDirListing();
 
-    // In case of tests where in the end so directory stays snapshottable the listing will return null, so ignore,
+    // In case of tests where in the end so directory stays snapshotable the listing will return null, so ignore,
     // else clean up all snapshots to allow minidfs to delete the directories and teardown.
     if (snaps != null) {
       for (SnapshottableDirectoryStatus sn : snaps) {
@@ -398,7 +398,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
     assertNotNull(fs.getFileStatus(
         new Path(externalDatabaseLocation, ".snapshot/" + secondSnapshot(primaryDbName.toLowerCase()))));
 
-    // Check if the destination is snapshottable.
+    // Check if the destination is snapshotable.
     assertTrue(fs.getFileStatus(externalDatabaseLocationDest).isSnapshotEnabled());
 
     // Check if snapshot exist at destination.
@@ -431,7 +431,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"bangalore"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Check if the new database location is snapshottable.
+    // Check if the new database location is snapshotable.
     assertTrue(fs.getFileStatus(externalDatabaseLocationAlter).isSnapshotEnabled());
 
     // Check if the snapshot exists at source.
@@ -442,7 +442,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
     LambdaTestUtils.intercept(FileNotFoundException.class, () -> fs
         .getFileStatus(new Path(externalDatabaseLocation, ".snapshot/" + secondSnapshot(primaryDbName.toLowerCase()))));
 
-    // Check if the new destination database location is snapshottable.
+    // Check if the new destination database location is snapshotable.
     assertTrue(fs.getFileStatus(externalDatabaseLocationAlterDest).isSnapshotEnabled());
 
     // Check if snapshot exist at destination.
@@ -507,7 +507,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"bangalore"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Create a table for which target is non-snapshottable.
+    // Create a table for which target is non-snapshotable.
 
     // Allow snapshot on the parent of destination.
     fs.mkdirs(externalTableLocationDestInDest.getParent());
@@ -649,16 +649,16 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"beijing"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Check if the t2 directory is snapshotoble and the snapshot is there.
+    // Check if the t2 directory is snapshotable and the snapshot is there.
     validateInitialSnapshotsCreated(externalTableLocation2.toString());
 
-    // Check if the partition directory is snapshottable and has snapshots
+    // Check if the partition directory is snapshotable and has snapshots
     validateInitialSnapshotsCreated(externalTablePart1.toString());
 
-    // Check the table not specified as configuration is not snapshottable
+    // Check the table not specified as configuration is not snapshotable
     assertFalse(fs.getFileStatus(externalTableLocation1).isSnapshotEnabled());
 
-    // Check the partition not specified as configuration is not snapshottable
+    // Check the partition not specified as configuration is not snapshotable
     assertFalse(fs.getFileStatus(externalTablePart2).isSnapshotEnabled());
 
     // Drop the snapshotted table and create another table with same location and add the other table to the config.
@@ -740,13 +740,13 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"kathmandu"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Check if the t1 directory is snapshotoble and the snapshot is there.
+    // Check if the t1 directory is snapshotable and the snapshot is there.
     assertTrue(fs.getFileStatus(externalTableLocation1).isSnapshotEnabled());
     assertNotNull(
         fs.getFileStatus(new Path(externalTableLocation1, ".snapshot/" + secondSnapshot(primaryDbName.toLowerCase()))));
     assertTrue(fs.getFileStatus(externalTableLocation1Target).isSnapshotEnabled());
 
-    // Check if the t2 directory is snapshotoble and the snapshot is there.
+    // Check if the t2 directory is snapshotable and the snapshot is there.
     assertTrue(fs.getFileStatus(externalTableLocation2).isSnapshotEnabled());
     assertNotNull(
         fs.getFileStatus(new Path(externalTableLocation2, ".snapshot/" + secondSnapshot(primaryDbName.toLowerCase()))));
@@ -771,10 +771,10 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"beijing"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Verify the new location is not snapshottable
+    // Verify the new location is not snapshotable
     assertFalse(fs.getFileStatus(externalTableLocation2New).isSnapshotEnabled());
 
-    // Verify the old location is not snapshottable now and the snapshot is cleaned up.
+    // Verify the old location is not snapshotable now and the snapshot is cleaned up.
     assertFalse(fs.getFileStatus(externalTableLocation1).isSnapshotEnabled());
     assertFalse(fs.getFileStatus(externalTableLocation1Target).isSnapshotEnabled());
     assertFalse(fs.getFileStatus(externalTableLocation2).isSnapshotEnabled());
@@ -991,7 +991,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"beijing"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Check if the t2 directory is snapshotoble and the snapshot is there.
+    // Check if the t2 directory is snapshotable and the snapshot is there.
     validateInitialSnapshotsCreated(externalTableLocation1.toString());
 
     // Add some more data and do a dump & load
@@ -1073,9 +1073,9 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
 
   @Test
   public void testSnapshotsWithCustomDbLevelPaths() throws Throwable {
-    // Create table1 inside database warehouse location, table2 outside db location and non snapshottable, table3
-    // outside database location but snapshottable, table4 and table5 inside a custom db path and snapshottable,
-    // table6 and table7 inside a custom db path but not snapshottable.
+    // Create table1 inside database warehouse location, table2 outside db location and non snapshotable, table3
+    // outside database location but snapshotable, table4 and table5 inside a custom db path and snapshotable,
+    // table6 and table7 inside a custom db path but not snapshotable.
 
     Path externalTableLocation2 = new Path("/" + testName.getMethodName() + "/table2/");
     DistributedFileSystem fs = primary.miniDFSCluster.getFileSystem();
@@ -1100,7 +1100,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
     Path externalTableLocation7 = new Path(externalCustomDb2Path, "table7");
     fs.mkdirs(externalTableLocation7, new FsPermission("777"));
 
-    // Specify table3 and the customDb1 location as snapshottable and customDb1 & customDb2 as custom locations for
+    // Specify table3 and the customDb1 location as snapshotable and customDb1 & customDb2 as custom locations for
     // single copy task.
     List<String> withClause = ReplicationTestUtils.includeExternalTableClause(true);
     withClause.add("'"
@@ -1146,11 +1146,11 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"sydney"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Check if the table3 and custom db1 location directory is snapshotoble and the snapshot is there.
+    // Check if the table3 and custom db1 location directory is snapshotable and the snapshot is there.
     validateInitialSnapshotsCreated(externalTableLocation3.toString());
     validateInitialSnapshotsCreated(externalCustomDb1Path.toString());
 
-    // Check if others aren't snapshottable.
+    // Check if others aren't snapshotable.
     assertFalse(fs.getFileStatus(externalCustomDb2Path).isSnapshotEnabled());
     assertFalse(fs.getFileStatus(externalTableLocation2).isSnapshotEnabled());
 
@@ -1188,7 +1188,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
     validateDiffSnapshotsCreated(externalTableLocation3.toString());
     validateDiffSnapshotsCreated(externalCustomDb1Path.toString());
 
-    // Check if others doesn't become snapshottable during incremental
+    // Check if others doesn't become snapshotable during incremental
     assertFalse(fs.getFileStatus(externalCustomDb2Path).isSnapshotEnabled());
     assertFalse(fs.getFileStatus(externalTableLocation2).isSnapshotEnabled());
 
@@ -1212,12 +1212,12 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"sydney", "perth", "adelaide"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Check if the t1 directory is snapshotoble and the snapshot is there.
+    // Check if the t1 directory is snapshotable and the snapshot is there.
     validateDiffSnapshotsCreated(externalTableLocation3.toString());
     validateDiffSnapshotsCreated(externalCustomDb1Path.toString());
 
-    // Add the other custom db path for creating snapshots and remove the already configured path as snapshottable.
-    // The new db location should become snapshottable and the snapshots should be cleared for the other db location.
+    // Add the other custom db path for creating snapshots and remove the already configured path as snapshotable.
+    // The new db location should become snapshotable and the snapshots should be cleared for the other db location.
     withClause = ReplicationTestUtils.includeExternalTableClause(true);
     withClause.add("'" + REPL_EXTERNAL_WAREHOUSE_SINGLE_COPY_TASK_PATHS.varname + "'='" + externalCustomDb2Path
         .makeQualified(fs.getUri(), fs.getWorkingDirectory()).toString() + "," + externalTableLocation3
@@ -1241,11 +1241,11 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .verifyResults(new String[] {"sydney", "perth", "adelaide", "darwin"})
         .verifyReplTargetProperty(replicatedDbName);
 
-    // Check if the table3 directory is snapshotoble and the db path2 became snapshottable.
+    // Check if the table3 directory is snapshotable and the db path2 became snapshotable.
     validateDiffSnapshotsCreated(externalTableLocation3.toString());
     validateInitialSnapshotsCreated(externalCustomDb2Path.toString());
 
-    // Check if others doesn't become snapshottable and the snapshots are cleared for the first custom db location.
+    // Check if others doesn't become snapshotable and the snapshots are cleared for the first custom db location.
     assertFalse(fs.getFileStatus(externalCustomDb1Path).isSnapshotEnabled());
     assertFalse(fs.getFileStatus(externalTableLocation2).isSnapshotEnabled());
   }
@@ -1392,7 +1392,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
     Path locationPath = new Path(location);
     DistributedFileSystem dfs = (DistributedFileSystem) locationPath.getFileSystem(conf);
 
-    // Check whether the source  location got snapshottable
+    // Check whether the source  location got snapshotable
     assertTrue("Snapshot not enabled for the source  location", dfs.getFileStatus(locationPath).isSnapshotEnabled());
 
     // Check whether the initial snapshot got created in the source db location.
