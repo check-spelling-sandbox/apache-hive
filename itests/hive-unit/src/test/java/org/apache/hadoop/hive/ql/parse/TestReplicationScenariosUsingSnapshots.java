@@ -674,7 +674,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("MSCK REPAIR TABLE t4 ADD PARTITIONS")
         .run("insert into t4 partition(country='china') values ('Shanghai')") // new partition in the recreated table.
         .run("insert into t4 partition(country='nepal') values ('pokhra')") // entry in old existing partition in recreated table.
-        .run("insert into t1 partition(country='india') values ('chennai')") // entry for newely added path in list.
+        .run("insert into t1 partition(country='india') values ('chennai')") // entry for newly added path in list.
         .dump(primaryDbName, withClause);
 
     replica.load(replicatedDbName, primaryDbName, withClause)
@@ -688,7 +688,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("select place from t4 where country='nepal'")
         .verifyResults(new String[] {"kathmandu", "pokhra"}) // Old and new entry both should be there
         .run("select place from t4 where country='china'")
-        .verifyResults(new String[] {"Shanghai"}) // the newely added partition should be there.
+        .verifyResults(new String[] {"Shanghai"}) // the newly added partition should be there.
         .verifyReplTargetProperty(replicatedDbName);
 
     // The newly added path should have the initial snapshot
