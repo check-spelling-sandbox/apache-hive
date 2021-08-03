@@ -47,7 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class QueryDisplay {
 
   /**
-   * Preffered object mapper for this class.
+   * Preferred object mapper for this class.
    *
    * It must be used to have things work in shaded environment (and its also more performant).
    */
