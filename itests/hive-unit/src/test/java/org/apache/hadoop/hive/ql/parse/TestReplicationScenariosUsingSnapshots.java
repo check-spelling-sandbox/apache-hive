@@ -630,7 +630,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("alter table t1 add partition (country='france') location '"+externalTablePart1.toString() + "'")
         .run("insert into t1 partition(country='france') values ('paris')")
         .run("alter table t2 add partition (country='china') location '"+externalTablePart2.toString() + "'")
-        .run("insert into t2 partition(country='china') values ('beejing')")
+        .run("insert into t2 partition(country='china') values ('beijing')")
         .dump(primaryDbName, withClause);
 
     replica.load(replicatedDbName, primaryDbName, withClause)
@@ -646,7 +646,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("select place from t2 where country='nepal'")
         .verifyResults(new String[] {"kathmandu"})
         .run("select place from t2 where country='china'")
-        .verifyResults(new String[] {"beejing"})
+        .verifyResults(new String[] {"beijing"})
         .verifyReplTargetProperty(replicatedDbName);
 
     // Check if the t2 directory is snapshotoble and the snapshot is there.
@@ -757,7 +757,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("drop table t1")
         .run("alter table t2 SET LOCATION '" + externalTableLocation2New +"'")
         .run("alter table t2 drop partition(country='nepal')")
-        .run("insert into t2 partition(country='china') values ('beejing')")
+        .run("insert into t2 partition(country='china') values ('beijing')")
         .dump(primaryDbName, withClause);
 
     // Load and check if the data is there and the dropped table isn't there.
@@ -768,7 +768,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("show tables like 't2'")
         .verifyResults(new String[] {"t2"})
         .run("select place from t2 where country='china'")
-        .verifyResults(new String[] {"beejing"})
+        .verifyResults(new String[] {"beijing"})
         .verifyReplTargetProperty(replicatedDbName);
 
     // Verify the new location is not snapshottable
@@ -976,7 +976,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("create external table table3 (id int)")
         .run("ALTER TABLE table3 SET TBLPROPERTIES ('external.table.purge'='true')")
         .run("insert into table1 partition(country='nepal') values ('kathmandu')")
-        .run("insert into table1 partition(country='china') values ('beejing')")
+        .run("insert into table1 partition(country='china') values ('beijing')")
         .run("insert into table2 values(1)")
         .run("insert into table3 values(5)")
         .dump(primaryDbName, withClause);
@@ -988,7 +988,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("select place from table1 where country='nepal'")
         .verifyResults(new String[] {"kathmandu"})
         .run("select place from table1 where country='china'")
-        .verifyResults(new String[] {"beejing"})
+        .verifyResults(new String[] {"beijing"})
         .verifyReplTargetProperty(replicatedDbName);
 
     // Check if the t2 directory is snapshotoble and the snapshot is there.
@@ -1004,7 +1004,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
     replica.load(replicatedDbName, primaryDbName, withClause)
         .run("use " + replicatedDbName)
         .run("select place from table1 where country='china'")
-        .verifyResults(new String[] {"beejing", "wuhan"})
+        .verifyResults(new String[] {"beijing", "wuhan"})
         .verifyReplTargetProperty(replicatedDbName);
 
     // Verify if diff snapshots is there.
@@ -1123,7 +1123,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("create external table table7 (place string) partitioned by (country string) row format "
             + "delimited fields terminated by ',' location '" + externalTableLocation7.toString() +"'")
         .run("insert into table2 partition(country='india') values ('bangalore')")
-        .run("insert into table3 partition(country='china') values ('beejing')")
+        .run("insert into table3 partition(country='china') values ('beijing')")
         .run("insert into table4 partition(country='usa') values ('new york')")
         .run("insert into table5 partition(country='japan') values ('tokyo')")
         .run("insert into table6 partition(country='nepal') values ('kathmandu')")
@@ -1135,7 +1135,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("select place from table2 where country='india'")
         .verifyResults(new String[] {"bangalore"})
         .run("select place from table3 where country='china'")
-        .verifyResults(new String[] {"beejing"})
+        .verifyResults(new String[] {"beijing"})
         .run("select place from table4 where country='usa'")
         .verifyResults(new String[] {"new york"})
         .run("select place from table5 where country='japan'")
@@ -1173,7 +1173,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("select place from table2 where country='india'")
         .verifyResults(new String[] {"bangalore", "chennai"})
         .run("select place from table3 where country='china'")
-        .verifyResults(new String[] {"beejing", "chengdu"})
+        .verifyResults(new String[] {"beijing", "chengdu"})
         .run("select place from table4 where country='usa'")
         .verifyResults(new String[] {"new york", "washington"})
         .run("select place from table5 where country='japan'")
@@ -1333,7 +1333,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("insert into table1 values ('bangalore')")
         .run("select place from table1")
         .verifyResults(new String[] {"bangalore"})
-        .run("insert into table2 values ('beejing')")
+        .run("insert into table2 values ('beijing')")
         .run("insert into table3 values ('new york')")
         .run("insert into table4 values ('tokyo')")
         .dump(primaryDbName, withClause);
@@ -1343,7 +1343,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("select place from table1")
         .verifyResults(new String[] {"bangalore"})
         .run("select place from table2")
-        .verifyResults(new String[] {"beejing"})
+        .verifyResults(new String[] {"beijing"})
         .run("select place from table3")
         .verifyResults(new String[] {"new york"})
         .run("select place from table4")
@@ -1369,7 +1369,7 @@ public class TestReplicationScenariosUsingSnapshots extends BaseReplicationAcros
         .run("select place from table1")
         .verifyResults(new String[] {"bangalore", "delhi"})
         .run("select place from table2")
-        .verifyResults(new String[] {"beejing", "wuhan"})
+        .verifyResults(new String[] {"beijing", "wuhan"})
         .run("select place from table3")
         .verifyResults(new String[] {"new york", "washington"})
         .run("select place from table4")
