@@ -852,7 +852,7 @@ public class Exec extends HplsqlBaseVisitor<Integer> implements Closeable {
       addVariable(new Var(v.getKey(), Var.Type.STRING, v.getValue()));
     }
     includeRcFile();
-    registerBuiltins();
+    registerBuiltIns();
   }
 
   private ParseTree parse(InputStream input) throws IOException {
@@ -867,7 +867,7 @@ public class Exec extends HplsqlBaseVisitor<Integer> implements Closeable {
     return tree;
   }
 
-  protected void registerBuiltins() {
+  protected void registerBuiltIns() {
     Var dbmVar = new Var(Type.HPL_OBJECT, "DBMS_OUTPUT");
     DbmOutput dbms = DbmOutputClass.INSTANCE.newInstance();
     dbms.initialize(console);
