@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * a requirement for the tables to be part of the query. Later on in the query, this class
  * will be called on the view level via the populateCacheForView call. At that point, if
  * something changed, it will populate the cache with the newly detected tables. It will also
- * change the underying table information for the view to optimize the next query using
+ * change the underlying table information for the view to optimize the next query using
  * the view.
  */
 public class CacheTableHelper {
