@@ -1143,7 +1143,7 @@ class TimestampLocalTZValueBoundaryScanner extends SingleValueBoundaryScanner {
 }
 
 /**
- * Calculates ranges on longs representing localtz timestamps in seconds returned by
+ * Calculates ranges on longs representing local tz timestamps in seconds returned by
  * IntervalDayTimeColumnVector.getTotalSeconds. Refer to VectorPTFGroupBatches.getValue for
  * INTERVAL_DAY_TIME.
  */
