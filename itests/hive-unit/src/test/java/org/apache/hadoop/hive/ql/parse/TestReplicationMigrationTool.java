@@ -190,8 +190,8 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
     DistributedFileSystem fs = primary.miniDFSCluster.getFileSystem();
     fs.mkdirs(externalTableLocationA, new FsPermission("777"));
 
-    Path externalTableLocationb = new Path("/" + testName.getMethodName() + "/" + primaryDbName + "/" + "b");
-    fs.mkdirs(externalTableLocationb, new FsPermission("777"));
+    Path externalTableLocationB = new Path("/" + testName.getMethodName() + "/" + primaryDbName + "/" + "b");
+    fs.mkdirs(externalTableLocationB, new FsPermission("777"));
 
     //externally add data to location
     try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationA, "filea1.txt"))) {
@@ -199,7 +199,7 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
       outputStream.write("13,21\n".getBytes());
     }
 
-    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationb, "fileb1.txt"))) {
+    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationB, "fileb1.txt"))) {
       outputStream.write("1,2\n".getBytes());
       outputStream.write("13,21\n".getBytes());
     }
@@ -208,7 +208,7 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
         "create external table tablea (i int, j int) row format delimited fields terminated by ',' " + "location '"
             + externalTableLocationA.toUri() + "'").run(
         "create external table tableb (i int, j int) row format delimited fields terminated by ',' " + "location '"
-            + externalTableLocationb.toUri() + "'").run("insert into table tableb values (25,26)")
+            + externalTableLocationB.toUri() + "'").run("insert into table tableb values (25,26)")
         .run("insert into table tableb values (28,29),(36,37),(42,43)").dump(primaryDbName, withClause);
 
     replica.load(replicatedDbName, primaryDbName, withClause).run("use " + replicatedDbName)
@@ -218,7 +218,7 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
     verifySuccessfulResult(tuple);
 
     // Alter the content of one of the file, keeping the bytes same
-    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationb, "fileb1.txt"))) {
+    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationB, "fileb1.txt"))) {
       outputStream.write("1,4\n".getBytes());
       outputStream.write("13,21\n".getBytes());
     }
