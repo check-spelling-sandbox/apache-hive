@@ -114,7 +114,7 @@ public class CacheTableHelper {
    * Populates the cache for the given table pairs associated with a viewName.
    * If the table names provided match the table names that we think are associated
    * with the view, we just return, because we presume that they have already been
-   * popuated via the "populateCache" method. If they are different, we populate the cache
+   * populated via the "populateCache" method. If they are different, we populate the cache
    * with the new associated tables and change our associated tables for the view.
    */
   public void populateCacheForView(List<Pair<String, String>> tables, HiveConf conf,
