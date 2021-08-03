@@ -166,7 +166,7 @@ public class TestReplicationScenariosAcidTables extends BaseReplicationScenarios
     testTargetDbReplIncompatible(true);
   }
 
-  private void testTargetDbReplIncompatible(boolean setReplIncompProp) throws Throwable {
+  private void testTargetDbReplIncompatible(boolean setReplIncompatibleProp) throws Throwable {
     HiveConf primaryConf = primary.getConf();
     TxnStore txnHandler = TxnUtils.getTxnStore(primary.getConf());
 
@@ -175,7 +175,7 @@ public class TestReplicationScenariosAcidTables extends BaseReplicationScenarios
             .dump(primaryDbName);
     replica.load(replicatedDbName, primaryDbName);
 
-    if (setReplIncompProp) {
+    if (setReplIncompatibleProp) {
       replica.run("ALTER DATABASE " + replicatedDbName +
               " SET DBPROPERTIES('" + ReplConst.REPL_INCOMPATIBLE + "'='false')");
       assert "false".equals(replica.getDatabase(replicatedDbName).getParameters().get(ReplConst.REPL_INCOMPATIBLE));
