@@ -609,10 +609,10 @@ public class AlterMaterializedViewRebuildAnalyzer extends CalcitePlanner {
     // Find disjuncts for each branches: INSERT, UPDATE, DELETE
     // TOK_WHERE
     //    or
-    //       <disjuct>
+    //       <disjunct>
     //       or
-    //          <disjuct>
-    //          <disjuct>
+    //          <disjunct>
+    //          <disjunct>
     //
     // Note: the order of disjuncts may change by other optimizations,
     // so we have to find the right disjunct for each branch
