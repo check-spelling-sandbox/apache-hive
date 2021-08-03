@@ -234,7 +234,7 @@ public class TestVectorPTFGroupBatches {
     Assert.assertEquals(2, groupBatches.blocks.size());
     Assert.assertEquals(6, groupBatches.size());
 
-    // here we wan't {4L, 5L} to be spilled first, even if we jump to there, because jump should
+    // here we want {4L, 5L} to be spilled first, even if we jump to there, because jump should
     // be transparent regardless of the current contents of in-memory batches
     groupBatches.jumpToLastBlock();
     assertBufferedBatchValues(groupBatches, new Long[]{4L, 5L});
