@@ -500,11 +500,11 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
     return getOpenTxnsList(false).toOpenTxnsResponse(excludeTxnTypes);
   }
 
-  private OpenTxnList getOpenTxnsList(boolean infoFileds) throws MetaException {
+  private OpenTxnList getOpenTxnsList(boolean infoFields) throws MetaException {
     Connection dbConn = null;
     try {
       dbConn = getDbConn(Connection.TRANSACTION_READ_COMMITTED);
-      return getOpenTxnsList(infoFileds, dbConn);
+      return getOpenTxnsList(infoFields, dbConn);
     } catch (SQLException e) {
       throw new MetaException(
           "Unable to get a connection: " + getMessage(e) + StringUtils.stringifyException(e));
