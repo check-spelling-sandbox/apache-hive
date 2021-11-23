@@ -1055,7 +1055,7 @@ public class TestArrowColumnarBatchSerDe {
   }
 
   @Test
-  public void testMapIntergerWithMoreThan1024Values() throws SerDeException {
+  public void testMapIntegerWithMoreThan1024Values() throws SerDeException {
     String[][] schema = {
             {"int_map", "map<string,int>"},
     };
