@@ -36,7 +36,7 @@ import org.apache.hive.service.auth.saml.HiveSamlUtils;
 public interface IJdbcBrowserClient extends Closeable {
 
   /**
-   * Start a webserver and bind to a port number as configued.
+   * Start a webserver and bind to a port number as configured.
    * @throws HiveJdbcBrowserException
    */
   void startListening() throws HiveJdbcBrowserException;
