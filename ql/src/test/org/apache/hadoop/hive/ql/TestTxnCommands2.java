@@ -1153,7 +1153,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
     execDDLOpAndCompactionConcurrently("DROP_TABLE", false);
   }
   @Test
-  public void testTruncateTableAndCompactioConcurrent() throws Exception {
+  public void testTruncateTableAndCompactionConcurrent() throws Exception {
     execDDLOpAndCompactionConcurrently("TRUNCATE_TABLE", false);
   }
   @Test
