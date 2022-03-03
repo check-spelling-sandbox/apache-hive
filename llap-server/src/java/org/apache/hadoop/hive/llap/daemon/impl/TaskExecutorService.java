@@ -74,13 +74,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * are submitted to wait queue for scheduling. Wait queue tasks are ordered based on the priority
  * of the task. The internal wait queue scheduler moves tasks from wait queue when executor slots
  * are available or when a higher priority task arrives and will schedule it for execution.
- * When pre-emption is enabled, the tasks from wait queue can replace(pre-empt) a running task.
- * The pre-empted task is reported back to the Application Master(AM) for it to be rescheduled.
+ * When preemption is enabled, the tasks from wait queue can replace(pre-empt) a running task.
+ * The preempted task is reported back to the Application Master(AM) for it to be rescheduled.
  * <br>
  * Because of the concurrent nature of task submission, the position of the task in wait queue is
- * held as long the scheduling of the task from wait queue (with or without pre-emption) is complete.
- * The order of pre-emption is based on the ordering in the pre-emption queue. All tasks that cannot
- * run to completion immediately (canFinish = false) are added to pre-emption queue.
+ * held as long the scheduling of the task from wait queue (with or without preemption) is complete.
+ * The order of preemption is based on the ordering in the preemption queue. All tasks that cannot
+ * run to completion immediately (canFinish = false) are added to preemption queue.
  * <br>
  * When all the executor threads are occupied and wait queue is full, the task scheduler will
  * return SubmissionState.REJECTED response
@@ -450,7 +450,7 @@ public class TaskExecutorService extends AbstractService
               }
             } else {
               if (LOG.isDebugEnabled() && lastKillTimeMs != null) {
-                LOG.debug("Grace period ended for the previous kill; preemtping more tasks");
+                LOG.debug("Grace period ended for the previous kill; preempting more tasks");
               }
               if (handleScheduleAttemptedRejection(task)) {
                 lastKillTimeMs = clock.getTime(); // We killed something.
@@ -771,7 +771,7 @@ public class TaskExecutorService extends AbstractService
     // to the tasks are not ready yet, the task is eligible for pre-emptable.
     if (enablePreemption) {
       if (!canFinish || !isGuaranteed) {
-        LOG.info("Adding {} to pre-emption queue", taskWrapper.getRequestId());
+        LOG.info("Adding {} to preemption queue", taskWrapper.getRequestId());
         addToPreemptionQueue(taskWrapper);
       }
     }
@@ -799,7 +799,7 @@ public class TaskExecutorService extends AbstractService
     if (victim == null) {
       return false; // Woe us.
     }
-    LOG.info("Invoking kill task for {} due to pre-emption to run {}", victim.getRequestId(), rejected.getRequestId());
+    LOG.info("Invoking kill task for {} due to preemption to run {}", victim.getRequestId(), rejected.getRequestId());
     // The task will either be killed or is already in the process of completing, which will
     // trigger the next scheduling run, or result in available slots being higher than 0,
     // which will cause the scheduler loop to continue.
@@ -885,7 +885,7 @@ public class TaskExecutorService extends AbstractService
           addToPreemptionQueue(taskWrapper);
         } else {
           // if guaranteed task, if the finishable state changed to non-finishable and if the task doesn't exist
-          // pre-emption queue, then add it so that it becomes candidate to kill
+          // preemption queue, then add it so that it becomes candidate to kill
           taskWrapper.updateCanFinishForPriority(newFinishableState);
           if (!newFinishableState && !taskWrapper.isInPreemptionQueue()) {
             // No need to check guaranteed here; if it was false we would already be in the queue.
@@ -971,10 +971,10 @@ public class TaskExecutorService extends AbstractService
    */
   private static boolean canPreempt(TaskWrapper candidate, TaskWrapper victim) {
     if (victim == null) return false;
-    SignableVertexSpec candVrtx = candidate.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
-    SignableVertexSpec vicVrtx = victim.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
-    if (candVrtx.getHiveQueryId().equals(vicVrtx.getHiveQueryId()) &&
-        candVrtx.getVertexIndex() == vicVrtx.getVertexIndex()) return false;
+    SignableVertexSpec candVertex = candidate.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
+    SignableVertexSpec vicVertex = victim.getTaskRunnerCallable().getFragmentInfo().getVertexSpec();
+    if (candVertex.getHiveQueryId().equals(vicVertex.getHiveQueryId()) &&
+        candVertex.getVertexIndex() == vicVertex.getVertexIndex()) return false;
     if (candidate.isGuaranteed() && !victim.isGuaranteed()) return true;
     return ((candidate.isGuaranteed() == victim.isGuaranteed())
         && candidate.canFinishForPriority() && !victim.getTaskRunnerCallable().canFinish());
@@ -1004,8 +1004,8 @@ public class TaskExecutorService extends AbstractService
     // be ignored, since the task knows it has completed (otherwise it would not be in this callback).
     //
     // If the task is removed from the queue as a result of this callback, and the scheduler happens to
-    // be in the section where it's looking for a preemptible task - the scheuler may end up pulling the
-    // next pre-emptible task and killing it (an extra preemption).
+    // be in the section where it's looking for a preemptible task - the scheduler may end up pulling the
+    // next preemptible task and killing it (an extra preemption).
     // TODO: This potential extra preemption can be avoided by synchronizing the entire tryScheduling block.\
     // This would essentially synchronize all operations - it would be better to see if there's an
     // approach where multiple locks could be used to avoid single threaded operation.
@@ -1046,7 +1046,7 @@ public class TaskExecutorService extends AbstractService
     }
 
     private void updatePreemptionListAndNotify(EndReason reason) {
-      // if this task was added to pre-emption list, remove it
+      // if this task was added to preemption list, remove it
       if (enablePreemption) {
         String state = reason == null ? "FAILED" : reason.name();
         boolean removed = removeFromPreemptionQueueUnlocked(taskWrapper);
@@ -1080,7 +1080,7 @@ public class TaskExecutorService extends AbstractService
         LOG.warn(
             "Received onSuccess/onFailure for a fragment for which a completing message was not received: {}",
             requestId);
-        // Happens due to AM side pre-emption, or the AM asking for a task to die.
+        // Happens due to AM side preemption, or the AM asking for a task to die.
         // There's no hooks at the moment to get information over.
         // For now - decrement the count to avoid accounting errors.
         runningFragmentCount.decrementAndGet();

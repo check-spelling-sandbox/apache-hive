@@ -2613,7 +2613,7 @@ public final class Utilities {
     final AtomicLong totalFileCount = new AtomicLong(0L);
     final AtomicLong totalDirectoryCount = new AtomicLong(0L);
 
-    HiveInterruptCallback interrup = HiveInterruptUtils.add(new HiveInterruptCallback() {
+    HiveInterruptCallback interrupt = HiveInterruptUtils.add(new HiveInterruptCallback() {
       @Override
       public void interrupt() {
         for (Path path : pathNeedProcess) {
@@ -2632,7 +2632,7 @@ public final class Utilities {
       for (final Path path : pathNeedProcess) {
         // All threads share the same Configuration and JobConf based on the
         // assumption that they are thread safe if only read operations are
-        // executed. It is not stated in Hadoop's javadoc, the sourcce codes
+        // executed. It is not stated in Hadoop's javadoc, the source codes
         // clearly showed that they made efforts for it and we believe it is
         // thread safe. Will revisit this piece of codes if we find the assumption
         // is not correct.
@@ -2739,7 +2739,7 @@ public final class Utilities {
       summary[2] += totalDirectoryCount.get();
     } finally {
       executor.shutdownNow();
-      HiveInterruptUtils.remove(interrup);
+      HiveInterruptUtils.remove(interrupt);
     }
   }
 
@@ -3563,7 +3563,7 @@ public final class Utilities {
         }
       }
 
-      // If the query references non-existent partitions
+      // If the query references nonexistent partitions
       // We need to add a empty file, it is not acceptable to change the
       // operator tree
       // Consider the query:
@@ -3684,7 +3684,7 @@ public final class Utilities {
     if (dummyRow) {
       // empty files are omitted at CombineHiveInputFormat.
       // for meta-data only query, it effectively makes partition columns disappear..
-      // this could be fixed by other methods, but this seemed to be the most easy (HIVEV-2955)
+      // this could be fixed by other methods, but this seemed to be the most easy (HIVE-2955)
       recWriter.write(new Text("empty"));  // written via HiveIgnoreKeyTextOutputFormat
     }
     recWriter.close(false);
@@ -4787,10 +4787,10 @@ public final class Utilities {
           cleanDirectInsertDirectory(childPath, fs, unionSuffix, lbLevels - 1, committed);
         } else {
           if (committed.contains(childPath)) {
-            throw new HiveException("LB FSOP has commited "
+            throw new HiveException("LB FSOP has committed "
                 + childPath + " outside of LB directory levels " + lbLevels);
           }
-          deleteUncommitedFile(childPath, fs);
+          deleteUncommittedFile(childPath, fs);
         }
         continue;
       }
@@ -4800,14 +4800,14 @@ public final class Utilities {
           continue; // A good file.
         }
         if (!childPath.getName().equals(AcidUtils.OrcAcidVersion.ACID_FORMAT)) {
-          deleteUncommitedFile(childPath, fs);
+          deleteUncommittedFile(childPath, fs);
         }
       } else if (!child.isDirectory()) {
         if (committed.contains(childPath)) {
-          throw new HiveException("Union FSOP has commited "
+          throw new HiveException("Union FSOP has committed "
               + childPath + " outside of union directory " + unionSuffix);
         }
-        deleteUncommitedFile(childPath, fs);
+        deleteUncommittedFile(childPath, fs);
       } else if (childPath.getName().equals(unionSuffix)) {
         // Found the right union directory; treat it as "our" directory.
         cleanDirectInsertDirectory(childPath, fs, null, 0, committed);
@@ -4824,7 +4824,7 @@ public final class Utilities {
     }
   }
 
-  private static void deleteUncommitedFile(Path childPath, FileSystem fs)
+  private static void deleteUncommittedFile(Path childPath, FileSystem fs)
       throws IOException, HiveException {
     Utilities.FILE_OP_LOGGER.info("Deleting {} that was not committed", childPath);
     // We should actually succeed here - if we fail, don't commit the query.

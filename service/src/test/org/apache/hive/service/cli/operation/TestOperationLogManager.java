@@ -159,12 +159,12 @@ public class TestOperationLogManager {
     operation.createOperationLog();
     String logLocation = operation.getOperationLog().toString();
     File logFile = new File(logLocation);
-    int readLenght = (int) HiveConf.getSizeVar(hiveConf,
+    int readLength = (int) HiveConf.getSizeVar(hiveConf,
         HiveConf.ConfVars.HIVE_SERVER2_HISTORIC_OPERATION_LOG_FETCH_MAXBYTES);
-    byte[] content = writeBytes(logFile, 2 * readLenght);
+    byte[] content = writeBytes(logFile, 2 * readLength);
     operation.getQueryInfo().setOperationLogLocation(logLocation);
     String operationLog = OperationLogManager.getOperationLog(operation.getQueryInfo());
-    assertEquals(new String(content, content.length - readLenght, readLenght), operationLog);
+    assertEquals(new String(content, content.length - readLength, readLength), operationLog);
     FileUtils.deleteQuietly(new File(OperationLogManager.getHistoricLogDir()));
   }
 

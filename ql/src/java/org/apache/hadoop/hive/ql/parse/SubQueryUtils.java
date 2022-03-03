@@ -133,7 +133,7 @@ public class SubQueryUtils {
     // TOK_SUBQUERY_EXPR
     //  0. TOK_SUBQUERY_OP
     //     0. TYPE: IN/SOME/EXISTS
-    //     1. Comparion op: >, < etc
+    //     1. Comparison op: >, < etc
     //  1. TOK_QUERY:   Subquery
     //  2. LHS expr
     //final ASTNode clonedSubExprAST = (ASTNode) SubQueryUtils.adaptor.dupTree(subqueryExprNode);
@@ -205,7 +205,7 @@ public class SubQueryUtils {
           // ImmutableCommonToken, whose type cannot be modified.
           if (sqOpType.getType() == HiveParser.KW_EXISTS) {
             newSqOpType = new ASTNode(new CommonToken(
-                HiveParser.TOK_SUBQUERY_OP_NOTEXISTS, "TOK_SUBQUERY_OP_NOTEXISTS"));
+                HiveParser.TOK_SUBQUERY_OP_NONEXISTENT, "TOK_SUBQUERY_OP_NONEXISTENT"));
           } else {
             newSqOpType = new ASTNode(new CommonToken(
                 HiveParser.TOK_SUBQUERY_OP_NOTIN, "TOK_SUBQUERY_OP_NOTIN"));

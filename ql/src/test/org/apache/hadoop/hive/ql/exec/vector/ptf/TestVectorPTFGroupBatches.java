@@ -234,7 +234,7 @@ public class TestVectorPTFGroupBatches {
     Assert.assertEquals(2, groupBatches.blocks.size());
     Assert.assertEquals(6, groupBatches.size());
 
-    // here we wan't {4L, 5L} to be spilled first, even if we jump to there, because jump should
+    // here we want {4L, 5L} to be spilled first, even if we jump to there, because jump should
     // be transparent regardless of the current contents of in-memory batches
     groupBatches.jumpToLastBlock();
     assertBufferedBatchValues(groupBatches, new Long[]{4L, 5L});
@@ -474,7 +474,7 @@ public class TestVectorPTFGroupBatches {
   }
 
   @Test
-  public void testFindInmemoryBatchIndex(){
+  public void testFindInMemoryBatchIndex(){
     VectorPTFGroupBatches batches = new VectorPTFGroupBatches(new Configuration(), 2);
     batches.currentBufferedBatchCount = 2;
     batches.inMemoryStartRowIndex = Arrays.asList(7, 9, 10);
@@ -564,7 +564,7 @@ public class TestVectorPTFGroupBatches {
     }
   }
 
-  /* inititialized to have state which is present in case of the following query:
+  /* initialized to have state which is present in case of the following query:
    * select p_mfgr, p_name, rowindex,
    * count(*) over(partition by p_mfgr order by p_date range between 1 preceding and current row) as cs1,
    * count(*) over(partition by p_mfgr order by p_date range between 3 preceding and current row) as cs2

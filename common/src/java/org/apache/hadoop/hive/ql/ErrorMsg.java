@@ -184,8 +184,8 @@ public enum ErrorMsg {
       "Unarchive before running this command"),
   ARCHIVE_METHODS_DISABLED(10107, "Archiving methods are currently disabled. " +
       "Please see the Hive wiki for more information about enabling archiving"),
-  ARCHIVE_ON_MULI_PARTS(10108, "ARCHIVE can only be run on a single partition"),
-  UNARCHIVE_ON_MULI_PARTS(10109, "ARCHIVE can only be run on a single partition"),
+  ARCHIVE_ON_MULTI_PARTS(10108, "ARCHIVE can only be run on a single partition"),
+  UNARCHIVE_ON_MULTI_PARTS(10109, "ARCHIVE can only be run on a single partition"),
   ARCHIVE_ON_TABLE(10110, "ARCHIVE can only be run on partitions"),
   RESERVED_PART_VAL(10111, "Partition value contains a reserved substring"),
   OFFLINE_TABLE_OR_PARTITION(10113, "Query against an offline table or partition"),
@@ -442,7 +442,7 @@ public enum ErrorMsg {
   REPLACE_MATERIALIZED_WITH_VIEW(10401, "Attempt to replace materialized view {0} with view", true),
   UPDATE_DELETE_VIEW(10402, "You cannot update or delete records in a view"),
   MATERIALIZED_VIEW_DEF_EMPTY(10403, "Query for the materialized view rebuild could not be retrieved"),
-  MERGE_PREDIACTE_REQUIRED(10404, "MERGE statement with both UPDATE and DELETE clauses " +
+  MERGE_PREDICATE_REQUIRED(10404, "MERGE statement with both UPDATE and DELETE clauses " +
     "requires \"AND <boolean>\" on the 1st WHEN MATCHED clause of <{0}>", true),
   MERGE_TOO_MANY_DELETE(10405, "MERGE statement can have at most 1 WHEN MATCHED ... DELETE clause: <{0}>", true),
   MERGE_TOO_MANY_UPDATE(10406, "MERGE statement can have at most 1 WHEN MATCHED ... UPDATE clause: <{0}>", true),

@@ -2566,7 +2566,7 @@ public class LlapTaskSchedulerService extends TaskScheduler {
           if (isShutdown.get()) {
             return null; // We are good.
           }
-          LOG.error("Scheduler thread was interrupte without shutdown and will now exit", ie);
+          LOG.error("Scheduler thread was interrupted without shutdown and will now exit", ie);
           throw ie;
         } catch (Throwable t) {
           // TODO: we might as well kill the AM at this point. How do we do that from here?
@@ -2660,7 +2660,7 @@ public class LlapTaskSchedulerService extends TaskScheduler {
 
       int oldNumSchedulableTasks = numSchedulableTasks;
       if (numSchedulableTasksConf == 0) {
-        int pendingQueueuCapacity = 0;
+        int pendingQueueCapacity = 0;
         String pendingQueueCapacityString = serviceInstance.getProperties()
                 .get(LlapRegistryService.LLAP_DAEMON_TASK_SCHEDULER_ENABLED_WAIT_QUEUE_SIZE);
         if (pendingQueueCapacityString == null) {
@@ -2671,9 +2671,9 @@ public class LlapTaskSchedulerService extends TaskScheduler {
                 serviceInstance, serviceInstance.getResource().getVirtualCores(),
                 pendingQueueCapacityString, serviceInstance.getResource().getMemory());
         if (pendingQueueCapacityString != null) {
-          pendingQueueuCapacity = Integer.parseInt(pendingQueueCapacityString);
+          pendingQueueCapacity = Integer.parseInt(pendingQueueCapacityString);
         }
-        this.numSchedulableTasks = numVcores + pendingQueueuCapacity;
+        this.numSchedulableTasks = numVcores + pendingQueueCapacity;
       } else {
         this.numSchedulableTasks = numSchedulableTasksConf;
         LOG.info("Setting up node: " + serviceInstance + " with schedulableCapacity=" + this.numSchedulableTasks);

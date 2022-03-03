@@ -548,12 +548,12 @@ public class Warehouse {
   /**
    * Makes a partition name from a specification
    * @param spec The partition specification, key and value pairs.
-   * @param addTrailingSeperator If true, adds a trailing separator e.g. 'ds=1/'.
+   * @param addTrailingSeparator If true, adds a trailing separator e.g. 'ds=1/'.
    * @param dynamic If true, create a dynamic partition name.
    * @return partition name
    * @throws MetaException
    */
-  public static String makePartNameUtil(Map<String, String> spec, boolean addTrailingSeperator, boolean dynamic)
+  public static String makePartNameUtil(Map<String, String> spec, boolean addTrailingSeparator, boolean dynamic)
           throws MetaException {
     StringBuilder suffixBuf = new StringBuilder();
     int i = 0;
@@ -577,7 +577,7 @@ public class Warehouse {
       i++;
     }
 
-    if (addTrailingSeperator && i > 0) {
+    if (addTrailingSeparator && i > 0) {
       suffixBuf.append(Path.SEPARATOR);
     }
 
@@ -587,14 +587,14 @@ public class Warehouse {
   /**
    * Makes a partition name from a specification
    * @param spec
-   * @param addTrailingSeperator if true, adds a trailing separator e.g. 'ds=1/'
+   * @param addTrailingSeparator if true, adds a trailing separator e.g. 'ds=1/'
    * @return partition name
    * @throws MetaException
    */
   public static String makePartName(Map<String, String> spec,
-      boolean addTrailingSeperator)
+      boolean addTrailingSeparator)
       throws MetaException {
-    return makePartNameUtil(spec, addTrailingSeperator, false);
+    return makePartNameUtil(spec, addTrailingSeparator, false);
   }
 
   /**
@@ -620,12 +620,12 @@ public class Warehouse {
    * Given a dynamic partition specification, return the path corresponding to the
    * static part of partition specification. This is basically similar to makePartName
    * but we get rid of MetaException since it is not serializable. This method skips
-   * the trailing path seperator also.
+   * the trailing path separator also.
    *
    * @param spec
    * @return string representation of the static part of the partition specification.
    */
-  public static String makeDynamicPartNameNoTrailingSeperator(Map<String, String> spec) {
+  public static String makeDynamicPartNameNoTrailingSeparator(Map<String, String> spec) {
     String partName = null;
     try {
       partName = makePartNameUtil(spec, false, true);

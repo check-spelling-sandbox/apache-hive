@@ -63,8 +63,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PowerMockIgnore({ "javax.management.*" })
 public class TestCopyUtils {
   /*
-  Distcp currently does not copy a single file in a distributed manner hence we dont care about
-  the size of file, if there is only file, we dont want to launch distcp.
+  Distcp currently does not copy a single file in a distributed manner hence we don't care about
+  the size of file, if there is only file, we don't want to launch distcp.
    */
   @Test
   public void distcpShouldNotBeCalledOnlyForOneFile() throws Exception {
@@ -118,7 +118,7 @@ public class TestCopyUtils {
     mockStatic(ReplChangeManager.class);
     when(UserGroupInformation.getCurrentUser()).thenReturn(mock(UserGroupInformation.class));
     HiveConf conf = mock(HiveConf.class);
-    conf.set(HiveConf.ConfVars.REPL_RETRY_INTIAL_DELAY.varname, "1s");
+    conf.set(HiveConf.ConfVars.REPL_RETRY_INITIAL_DELAY.varname, "1s");
     FileSystem fs = mock(FileSystem.class);
     Path source = mock(Path.class);
     Path destination = mock(Path.class);
@@ -178,7 +178,7 @@ public class TestCopyUtils {
     mockStatic(ReplChangeManager.class);
     when(UserGroupInformation.getCurrentUser()).thenReturn(mock(UserGroupInformation.class));
     HiveConf conf = mock(HiveConf.class);
-    conf.set(HiveConf.ConfVars.REPL_RETRY_INTIAL_DELAY.varname, "1s");
+    conf.set(HiveConf.ConfVars.REPL_RETRY_INITIAL_DELAY.varname, "1s");
     FileSystem fs = mock(FileSystem.class);
     Path source = mock(Path.class);
     Path destination = mock(Path.class);

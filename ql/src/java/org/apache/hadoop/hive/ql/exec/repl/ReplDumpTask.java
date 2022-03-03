@@ -721,7 +721,7 @@ public class ReplDumpTask extends Task<ReplDumpWork> implements Serializable {
     return !ReplUtils.tableIncludedInReplScope(work.oldReplScope, table.getTableName());
   }
 
-  private boolean isTableSatifiesConfig(Table table) {
+  private boolean isTableSatisfiesConfig(Table table) {
     if (table == null) {
       return false;
     }
@@ -946,7 +946,7 @@ public class ReplDumpTask extends Task<ReplDumpWork> implements Serializable {
                 dumpTable(matchedDbName, tableName, validTxnList, dbRootMetadata, dbRootData, bootDumpBeginReplId,
                         hiveDb, tableTuple, managedTblList, dataCopyAtLoad);
               }
-              if (tableList != null && isTableSatifiesConfig(table)) {
+              if (tableList != null && isTableSatisfiesConfig(table)) {
                 tableList.add(tableName);
               }
             } catch (InvalidTableException te) {
@@ -1263,7 +1263,7 @@ public class ReplDumpTask extends Task<ReplDumpWork> implements Serializable {
               LOG.debug(te.getMessage());
             }
             dumpConstraintMetadata(dbName, tblName, dbRoot, hiveDb, table != null ? table.getTTable().getId() : -1);
-            if (tableList != null && isTableSatifiesConfig(table)) {
+            if (tableList != null && isTableSatisfiesConfig(table)) {
               tableList.add(tblName);
             }
           }
@@ -1518,7 +1518,7 @@ public class ReplDumpTask extends Task<ReplDumpWork> implements Serializable {
     // phase won't be able to replicate those txns. So, the logic is to wait for the given amount
     // of time to see if all open txns < current txn is getting aborted/committed. If not, then
     // we forcefully abort those txns just like AcidHouseKeeperService.
-    //Exclude readonly and repl created tranasactions
+    //Exclude readonly and repl created transactions
     ValidTxnList validTxnList = getTxnMgr().getValidTxns(excludedTxns);
     while (System.currentTimeMillis() < waitUntilTime) {
       //check if no open txns at all
@@ -1604,7 +1604,7 @@ public class ReplDumpTask extends Task<ReplDumpWork> implements Serializable {
     } else {
       return UUID.randomUUID().toString();
       // TODO: time good enough for now - we'll likely improve this.
-      // We may also work in something the equivalent of pid, thrid and move to nanos to ensure
+      // We may also work in something the equivalent of pid, third and move to nanos to ensure
       // uniqueness.
     }
   }

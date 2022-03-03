@@ -90,7 +90,7 @@ dboutput ('jdbc:derby:;databaseName=${system:test.tmp.dir}/test_derby_perf;creat
   "s_market_desc" VARCHAR(100), "s_market_manager" VARCHAR(40), "s_division_id" INTEGER, "s_division_name" VARCHAR(50),
   "s_company_id" INTEGER, "s_company_name" VARCHAR(50), "s_street_number" VARCHAR(10), "s_street_name" VARCHAR(60),
   "s_street_type" CHAR(15), "s_suite_number" CHAR(10), "s_city" VARCHAR(60), "s_county" VARCHAR(30),
-  "s_state" CHAR(2), "s_zip" CHAR(10), "s_country" VARCHAR(20), "s_gmt_offset" DECIMAL(5,2), "s_tax_precentage" DECIMAL(5,2))' ),
+  "s_state" CHAR(2), "s_zip" CHAR(10), "s_country" VARCHAR(20), "s_gmt_offset" DECIMAL(5,2), "s_tax_percentage" DECIMAL(5,2))' ),
 dboutput ('jdbc:derby:;databaseName=${system:test.tmp.dir}/test_derby_perf;create=true','user1','passwd1',
 'CREATE TABLE HOUSEHOLD_DEMOGRAPHICS ("hd_demo_sk" INTEGER, "hd_income_band_sk" INTEGER, "hd_buy_potential" CHAR(15),
   "hd_dep_count" INTEGER, "hd_vehicle_count" INTEGER)' ),
@@ -464,8 +464,8 @@ CREATE EXTERNAL TABLE item
     i_class                   char(50)                      ,
     i_category_id             int                           ,
     i_category                char(50)                      ,
-    i_manufact_id             int                           ,
-    i_manufact                char(50)                      ,
+    i_manufacturer_id         int                           ,
+    i_manufacturer            char(50)                      ,
     i_size                    char(20)                      ,
     i_formulation             char(20)                      ,
     i_color                   char(20)                      ,
@@ -585,7 +585,7 @@ CREATE EXTERNAL TABLE store
     s_zip                     char(10)                      ,
     s_country                 varchar(20)                   ,
     s_gmt_offset              decimal(5,2)                  ,
-    s_tax_precentage          decimal(5,2)                  
+    s_tax_percentage          decimal(5,2)                  
 )
 STORED BY 'org.apache.hive.storage.jdbc.JdbcStorageHandler'
 TBLPROPERTIES (
@@ -1254,7 +1254,7 @@ with ss as (
 				 customer_address,
 				 item
 			 where
-				 i_manufact_id               in (select
+				 i_manufacturer_id           in (select
 			  i_manufact_id
 			from
 			 item
@@ -1275,7 +1275,7 @@ with ss as (
 				 customer_address,
 				 item
 			 where
-				 i_manufact_id               in (select
+				 i_manufacturer_id           in (select
 			  i_manufact_id
 			from
 			 item
@@ -1326,7 +1326,7 @@ with ss as (
 				 customer_address,
 				 item
 			 where
-				 i_manufact_id               in (select
+				 i_manufacturer_id           in (select
 			  i_manufact_id
 			from
 			 item
@@ -1347,7 +1347,7 @@ with ss as (
 				 customer_address,
 				 item
 			 where
-				 i_manufact_id               in (select
+				 i_manufacturer_id           in (select
 			  i_manufact_id
 			from
 			 item

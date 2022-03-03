@@ -65,7 +65,7 @@ path=$3
 
 #If path isn't specified
 if [ $# -eq 2 ]; then
-    echo "Path isn't explicitily provided. Using ""$PWD"
+    echo "Path isn't explicitly provided. Using ""$PWD"
     path=$PWD
 fi
 

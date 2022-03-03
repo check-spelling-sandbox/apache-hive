@@ -1143,7 +1143,7 @@ public class TestHiveIcebergStorageHandlerNoScan {
     Assert.assertEquals(1, partitionFields.size());
     Assert.assertEquals("family_name", partitionFields.get(0).name());
 
-    // Addign new columns, assigning them as partition columns then removing 1 partition column
+    // Adding new columns, assigning them as partition columns then removing 1 partition column
     shell.executeStatement("ALTER TABLE default.customers ADD COLUMNS (p1 string, p2 string)");
     shell.executeStatement("ALTER TABLE default.customers SET PARTITION SPEC (family_name, p1, p2)");
 

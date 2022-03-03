@@ -879,7 +879,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
   }
 
   /**
-   * Test update that hits multiple partitions (i.e. requries dynamic partition insert to process)
+   * Test update that hits multiple partitions (i.e. requires dynamic partition insert to process)
    * @throws Exception
    */
   @Test
@@ -1153,7 +1153,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
     execDDLOpAndCompactionConcurrently("DROP_TABLE", false);
   }
   @Test
-  public void testTruncateTableAndCompactioConcurrent() throws Exception {
+  public void testTruncateTableAndCompactionConcurrent() throws Exception {
     execDDLOpAndCompactionConcurrently("TRUNCATE_TABLE", false);
   }
   @Test
@@ -1164,24 +1164,24 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
   public void testTruncatePartitionAndCompactionConcurrent() throws Exception {
     execDDLOpAndCompactionConcurrently("TRUNCATE_PARTITION", true);
   }
-  private void execDDLOpAndCompactionConcurrently(String opType, boolean isPartioned) throws Exception {
+  private void execDDLOpAndCompactionConcurrently(String opType, boolean isPartitioned) throws Exception {
     String tblName = "hive12352";
     String partName = "test";
 
     runStatementOnDriver("DROP TABLE if exists " + tblName);
     runStatementOnDriver("CREATE TABLE " + tblName + "(a INT, b STRING)" +
-      (isPartioned ? "partitioned by (p STRING)" : "") +
+      (isPartitioned ? "partitioned by (p STRING)" : "") +
       " STORED AS ORC  TBLPROPERTIES ( 'transactional'='true' )");
 
     //create some data
     runStatementOnDriver("INSERT INTO " + tblName +
-      (isPartioned ? " PARTITION (p='" + partName + "')" : "") +
+      (isPartitioned ? " PARTITION (p='" + partName + "')" : "") +
       " VALUES (1, 'foo'),(2, 'bar'),(3, 'baz')");
     runStatementOnDriver("UPDATE " + tblName + " SET b = 'blah' WHERE a = 3");
 
     //run Worker to execute compaction
     CompactionRequest req = new CompactionRequest("default", tblName, CompactionType.MAJOR);
-    if (isPartioned) {
+    if (isPartitioned) {
       req.setPartitionname("p=" + partName);
     }
     txnHandler.compact(req);
@@ -1237,7 +1237,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
 
     FileSystem fs = FileSystem.get(hiveConf);
     FileStatus[] status = fs.listStatus(new Path(getWarehouseDir() + "/" + tblName +
-        (isPartioned ? "/p=" + partName : "")),
+        (isPartitioned ? "/p=" + partName : "")),
       FileUtils.HIDDEN_FILES_PATH_FILTER);
     Assert.assertEquals(0, status.length);
   }
@@ -1568,7 +1568,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
    * Only need 1 Stats task for MERGE (currently we get 1 per branch).
    * Should also eliminate Move task - that's a general ACID task
    */
-  private void logResuts(List<String> r, String header, String prefix) {
+  private void logResults(List<String> r, String header, String prefix) {
     LOG.info(prefix + " " + header);
     StringBuilder sb = new StringBuilder();
     int numLines = 0;
@@ -1643,7 +1643,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
       "WHEN NOT MATCHED THEN INSERT VALUES(source.a2, source.b2) ";//AND b < 1
     r = runStatementOnDriver(query);
     //r = runStatementOnDriver("explain  " + query);
-    //logResuts(r, "Explain logical1", "");
+    //logResults(r, "Explain logical1", "");
 
     r = runStatementOnDriver("select a,b from " + Table.ACIDTBL + " order by a,b");
     int[][] rExpected = {{2,2},{4,44},{5,5},{7,8},{11,11}};
@@ -1736,7 +1736,7 @@ public class TestTxnCommands2 extends TxnCommandsBaseForTests {
     // Read [default@acidtblpart, default@acidtblpart@p=p1, default@acidtblpart@p=p2]
     // Write [default@acidtblpart@p=p1, default@acidtblpart@p=p2] - PARTITION/UPDATE, PARTITION/UPDATE
     //todo: Why acquire per partition locks - if you have many partitions that's hugely inefficient.
-    //could acquire 1 table level Shared_write intead
+    //could acquire 1 table level Shared_write instead
     runStatementOnDriver("update " + Table.ACIDTBLPART + " set b = 1");
 
     //In UpdateDeleteSemanticAnalyzer, after super analyze

@@ -123,13 +123,13 @@ public class FallbackHiveAuthorizer extends AbstractHiveAuthorizer {
 
   @Override
   public void grantRole(List<HivePrincipal> hivePrincipals, List<String> roles, boolean grantOption, HivePrincipal
-          grantorPrinc) throws HiveAuthzPluginException, HiveAccessControlException {
+          grantorPrincipal) throws HiveAuthzPluginException, HiveAccessControlException {
     throw new HiveAuthzPluginException("grantRole not implemented in FallbackHiveAuthorizer");
   }
 
   @Override
   public void revokeRole(List<HivePrincipal> hivePrincipals, List<String> roles, boolean grantOption, HivePrincipal
-          grantorPrinc) throws HiveAuthzPluginException, HiveAccessControlException {
+          grantorPrincipal) throws HiveAuthzPluginException, HiveAccessControlException {
     throw new HiveAuthzPluginException("revokeRole not implemented in FallbackHiveAuthorizer");
   }
 

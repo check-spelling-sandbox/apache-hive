@@ -57,7 +57,7 @@ public class TestMetastoreTransformer {
     conf.set("datanucleus.autoCreateTables", "false");
     conf.set("hive.in.test", "true");
 
-    MetaStoreTestUtils.setConfForStandloneMode(conf);
+    MetaStoreTestUtils.setConfForStandaloneMode(conf);
 
     warehouse = new Warehouse(conf);
     client = createClient();

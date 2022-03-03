@@ -732,7 +732,7 @@ public class CliConfigs {
         setHiveConfDir("data/conf/iceberg/tez");
         setClusterType(MiniClusterType.TEZ);
       } catch (Exception e) {
-        throw new RuntimeException("can't contruct cliconfig", e);
+        throw new RuntimeException("can't construct cliconfig", e);
       }
     }
   }
@@ -772,7 +772,7 @@ public class CliConfigs {
         setHiveConfDir("data/conf/iceberg/llap");
         setClusterType(MiniClusterType.LLAP_LOCAL);
       } catch (Exception e) {
-        throw new RuntimeException("can't contruct cliconfig", e);
+        throw new RuntimeException("can't construct cliconfig", e);
       }
     }
   }

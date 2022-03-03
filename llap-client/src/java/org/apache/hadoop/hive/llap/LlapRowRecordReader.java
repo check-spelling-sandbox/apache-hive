@@ -166,7 +166,7 @@ public class LlapRowRecordReader implements RecordReader<NullWritable, Row> {
     case LIST:
       ListObjectInspector loi = (ListObjectInspector) oi;
       int listSize = loi.getListLength(val);
-      // Per ListObjectInpsector.getListLength(), -1 length means null list.
+      // Per ListObjectInspector.getListLength(), -1 length means null list.
       if (listSize < 0) {
         return null;
       }
@@ -180,7 +180,7 @@ public class LlapRowRecordReader implements RecordReader<NullWritable, Row> {
     case MAP:
       MapObjectInspector moi = (MapObjectInspector) oi;
       int mapSize = moi.getMapSize(val);
-      // Per MapObjectInpsector.getMapSize(), -1 length means null map.
+      // Per MapObjectInspector.getMapSize(), -1 length means null map.
       if (mapSize < 0) {
         return null;
       }

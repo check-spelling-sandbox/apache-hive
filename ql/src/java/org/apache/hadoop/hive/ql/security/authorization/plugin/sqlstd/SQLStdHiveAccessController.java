@@ -238,7 +238,7 @@ public class SQLStdHiveAccessController implements HiveAccessController {
 
     try {
       // unfortunately, the metastore api revokes all privileges that match on
-      // principal, privilege object type it does not filter on the grator
+      // principal, privilege object type it does not filter on the grantor
       // username.
       // So this will revoke privileges that are granted by other users.This is
       // not SQL compliant behavior. Need to change/add a metastore api
@@ -286,7 +286,7 @@ public class SQLStdHiveAccessController implements HiveAccessController {
 
   @Override
   public void grantRole(List<HivePrincipal> hivePrincipals, List<String> roleNames,
-    boolean grantOption, HivePrincipal grantorPrinc) throws HiveAuthzPluginException,
+    boolean grantOption, HivePrincipal grantorPrincipal) throws HiveAuthzPluginException,
     HiveAccessControlException {
     if (!(isUserAdmin() || doesUserHasAdminOption(roleNames))) {
       throw new HiveAccessControlException("Current user : " + currentUserName+ " is not"
@@ -298,8 +298,8 @@ public class SQLStdHiveAccessController implements HiveAccessController {
           IMetaStoreClient mClient = metastoreClientFactory.getHiveMetastoreClient();
           mClient.grant_role(roleName, hivePrincipal.getName(),
               AuthorizationUtils.getThriftPrincipalType(hivePrincipal.getType()),
-              grantorPrinc.getName(),
-              AuthorizationUtils.getThriftPrincipalType(grantorPrinc.getType()), grantOption);
+              grantorPrincipal.getName(),
+              AuthorizationUtils.getThriftPrincipalType(grantorPrincipal.getType()), grantOption);
         } catch (MetaException e) {
           throw SQLAuthorizationUtils.getPluginException("Error granting role", e);
         } catch (Exception e) {
@@ -313,7 +313,7 @@ public class SQLStdHiveAccessController implements HiveAccessController {
 
   @Override
   public void revokeRole(List<HivePrincipal> hivePrincipals, List<String> roleNames,
-    boolean grantOption, HivePrincipal grantorPrinc) throws HiveAuthzPluginException,
+    boolean grantOption, HivePrincipal grantorPrincipal) throws HiveAuthzPluginException,
     HiveAccessControlException {
     if (!(isUserAdmin() || doesUserHasAdminOption(roleNames))) {
       throw new HiveAccessControlException("Current user : " + currentUserName+ " is not"

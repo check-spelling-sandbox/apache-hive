@@ -506,10 +506,10 @@ public class HiveInputFormat<K extends WritableComparable, V extends Writable>
       Utilities.copyJobSecretToTableProperties(table);
       Utilities.copyTablePropertiesToConf(table, conf);
       if (tableScan != null) {
-        AcidUtils.setAcidOperationalProperties(conf, tableScan.getConf().isTranscationalTable(),
+        AcidUtils.setAcidOperationalProperties(conf, tableScan.getConf().isTransactionalTable(),
             tableScan.getConf().getAcidOperationalProperties());
 
-        if (tableScan.getConf().isTranscationalTable() && (validWriteIdList == null)) {
+        if (tableScan.getConf().isTransactionalTable() && (validWriteIdList == null)) {
           throw new IOException("Acid table: " + table.getTableName()
                   + " is missing from the ValidWriteIdList config: "
                   + conf.get(ValidTxnWriteIdList.VALID_TABLES_WRITEIDS_KEY));
@@ -1050,7 +1050,7 @@ public class HiveInputFormat<K extends WritableComparable, V extends Writable>
         // push down filters and as of information
         pushFiltersAndAsOf(jobConf, ts, this.mrwork);
 
-        AcidUtils.setAcidOperationalProperties(job, ts.getConf().isTranscationalTable(),
+        AcidUtils.setAcidOperationalProperties(job, ts.getConf().isTransactionalTable(),
             ts.getConf().getAcidOperationalProperties());
         AcidUtils.setValidWriteIdList(job, ts.getConf());
       }

@@ -205,13 +205,13 @@ import com.google.common.annotations.VisibleForTesting;
  *
  * The exception to his is Derby which doesn't support proper S4U.  Derby is always running embedded
  * (this is the only supported configuration for Derby)
- * in the same JVM as HiveMetaStoreHandler thus we use JVM wide lock to properly sequnce the operations.
+ * in the same JVM as HiveMetaStoreHandler thus we use JVM wide lock to properly sequence the operations.
  *
  * {@link #derbyLock}
 
  * If we ever decide to run remote Derby server, according to
  * https://db.apache.org/derby/docs/10.0/manuals/develop/develop78.html all transactions will be
- * seriazlied, so that would also work though has not been tested.
+ * serialized, so that would also work though has not been tested.
  *
  * General design note:
  * It's imperative that any operation on a txn (e.g. commit), ensure (atomically) that this txn is
@@ -222,11 +222,11 @@ import com.google.common.annotations.VisibleForTesting;
  * Metastore has retry logic in both {@link org.apache.hadoop.hive.metastore.RetryingMetaStoreClient}
  * and {@link org.apache.hadoop.hive.metastore.RetryingHMSHandler}.  The retry logic there is very
  * generic and is not aware whether the operations are idempotent or not.  (This is separate from
- * retry logic here in TxnHander which can/does retry DB errors intelligently).  The worst case is
+ * retry logic here in TxnHandler which can/does retry DB errors intelligently).  The worst case is
  * when an op here issues a successful commit against the RDBMS but the calling stack doesn't
  * receive the ack and retries.  (If an op fails before commit, it's trivially idempotent)
  * Thus the ops here need to be made idempotent as much as possible or
- * the metstore call stack should have logic not to retry.  There are {@link RetrySemantics}
+ * the metastore call stack should have logic not to retry.  There are {@link RetrySemantics}
  * annotations to document the behavior.
  */
 @InterfaceAudience.Private
@@ -500,11 +500,11 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
     return getOpenTxnsList(false).toOpenTxnsResponse(excludeTxnTypes);
   }
 
-  private OpenTxnList getOpenTxnsList(boolean infoFileds) throws MetaException {
+  private OpenTxnList getOpenTxnsList(boolean infoFields) throws MetaException {
     Connection dbConn = null;
     try {
       dbConn = getDbConn(Connection.TRANSACTION_READ_COMMITTED);
-      return getOpenTxnsList(infoFileds, dbConn);
+      return getOpenTxnsList(infoFields, dbConn);
     } catch (SQLException e) {
       throw new MetaException(
           "Unable to get a connection: " + getMessage(e) + StringUtils.stringifyException(e));
@@ -1603,7 +1603,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
   }
 
   /**
-   * Create Notifiaction Events on txn commit
+   * Create Notification Events on txn commit
    * @param dbConn DatabaseConnection
    * @param txnid committed txn
    * @param txnType transaction type
@@ -2293,7 +2293,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
   }
 
   @Override
-  public MaxAllocatedTableWriteIdResponse getMaxAllocatedTableWrited(MaxAllocatedTableWriteIdRequest rqst) throws MetaException {
+  public MaxAllocatedTableWriteIdResponse getMaxAllocatedTableWriteId(MaxAllocatedTableWriteIdRequest rqst) throws MetaException {
     String dbName = rqst.getDbName();
     String tableName = rqst.getTableName();
     try {
@@ -2318,13 +2318,13 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
         LOG.error(
             "Exception during reading the max allocated writeId for dbName={}, tableName={}. Will retry if possible.",
             dbName, tableName, e);
-        checkRetryable(e, "getMaxAllocatedTableWrited(" + rqst + ")");
+        checkRetryable(e, "getMaxAllocatedTableWriteId(" + rqst + ")");
         throw new MetaException("Unable to update transaction database " + StringUtils.stringifyException(e));
       } finally {
         close(rs, pStmt, dbConn);
       }
     } catch (RetryException e) {
-      return getMaxAllocatedTableWrited(rqst);
+      return getMaxAllocatedTableWriteId(rqst);
     }
   }
 
@@ -2969,7 +2969,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
    * This enters locks into the queue in {@link #LOCK_WAITING} mode.
    *
    * Isolation Level Notes:
-   * 1. We use S4U (withe read_committed) to generate the next (ext) lock id.  This serializes
+   * 1. We use S4U (with read_committed) to generate the next (ext) lock id.  This serializes
    * any 2 {@code enqueueLockWithRetry()} calls.
    * 2. We use S4U on the relevant TXNS row to block any concurrent abort/commit/etc operations
    * @see #checkLockWithRetry(Connection, long, long, boolean)
@@ -3134,7 +3134,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
   private Optional<Long> getWriteIdFromDb(long txnid, Connection dbConn, String dbName, String tblName) throws SQLException {
     if (tblName != null) {
       // It is assumed the caller have already allocated write id for adding/updating data to
-      // the acid tables. However, DDL operatons won't allocate write id and hence this query
+      // the acid tables. However, DDL operations won't allocate write id and hence this query
       // may return empty result sets.
       // Get the write id allocated by this txn for the given table writes
       try (PreparedStatement pstmt = dbConn.prepareStatement(SELECT_WRITE_ID_QUERY)) {
@@ -5610,7 +5610,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
         }
         dbConn.commit();
         if (timedOutLockIds.isEmpty()) {
-          LOG.debug("Did not find any timed-out locks, therefore retuning.");
+          LOG.debug("Did not find any timed-out locks, therefore returning.");
           return;
         }
       }
@@ -5826,7 +5826,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
     } catch (SQLException e) {
       if (dbProduct.isTableNotExistsError(e)) {
         // If the table does not exists anymore, we disable the flag and start to work the new way
-        // This enables to switch to the new funcionality without a restart
+        // This enables to switch to the new functionality without a restart
         useMinHistoryLevel = false;
       } else {
         throw e;
@@ -5947,7 +5947,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
   @Override
   public LockHandle acquireLock(String key) throws MetaException {
     /**
-     * The implementation here is a bit kludgey but done so that code exercised by unit tests
+     * The implementation here is a bit kludgy but done so that code exercised by unit tests
      * (which run against Derby which has no support for select for update) is as similar to
      * production code as possible.
      * In particular, with Derby we always run in a single process with a single metastore and
@@ -5977,7 +5977,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
             if (!isDuplicateKeyError(ex)) {
               throw new RuntimeException("Unable to lock " + quoteString(key) + " due to: " + getMessage(ex), ex);
             }
-            //if here, it means a concrurrent acquireLock() inserted the 'key'
+            //if here, it means a concurrent acquireLock() inserted the 'key'
 
             //rollback is done for the benefit of Postgres which throws (SQLState=25P02, ErrorCode=0) if
             //you attempt any stmt in a txn which had an error.
@@ -6050,7 +6050,7 @@ abstract class TxnHandler implements TxnStore, TxnStore.MutexAPI {
       this.rs = rs;
       this.derbySemaphore = derbySemaphore;
       if(derbySemaphore != null) {
-        //oterwise it may later release permit acquired by someone else
+        //otherwise it may later release permit acquired by someone else
         assert derbySemaphore.availablePermits() == 0 : "Expected locked Semaphore";
       }
       this.key = key;

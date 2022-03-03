@@ -186,29 +186,29 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
   @Test
   public void testModifiedContentAndOpenFiles() throws Throwable {
     List<String> withClause = ReplicationTestUtils.includeExternalTableClause(true);
-    Path externalTableLocationa = new Path("/" + testName.getMethodName() + "/" + primaryDbName + "/" + "a/");
+    Path externalTableLocationA = new Path("/" + testName.getMethodName() + "/" + primaryDbName + "/" + "a/");
     DistributedFileSystem fs = primary.miniDFSCluster.getFileSystem();
-    fs.mkdirs(externalTableLocationa, new FsPermission("777"));
+    fs.mkdirs(externalTableLocationA, new FsPermission("777"));
 
-    Path externalTableLocationb = new Path("/" + testName.getMethodName() + "/" + primaryDbName + "/" + "b");
-    fs.mkdirs(externalTableLocationb, new FsPermission("777"));
+    Path externalTableLocationB = new Path("/" + testName.getMethodName() + "/" + primaryDbName + "/" + "b");
+    fs.mkdirs(externalTableLocationB, new FsPermission("777"));
 
     //externally add data to location
-    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationa, "filea1.txt"))) {
+    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationA, "filea1.txt"))) {
       outputStream.write("1,2\n".getBytes());
       outputStream.write("13,21\n".getBytes());
     }
 
-    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationb, "fileb1.txt"))) {
+    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationB, "fileb1.txt"))) {
       outputStream.write("1,2\n".getBytes());
       outputStream.write("13,21\n".getBytes());
     }
 
     WarehouseInstance.Tuple tuple = primary.run("use " + primaryDbName).run(
         "create external table tablea (i int, j int) row format delimited fields terminated by ',' " + "location '"
-            + externalTableLocationa.toUri() + "'").run(
+            + externalTableLocationA.toUri() + "'").run(
         "create external table tableb (i int, j int) row format delimited fields terminated by ',' " + "location '"
-            + externalTableLocationb.toUri() + "'").run("insert into table tableb values (25,26)")
+            + externalTableLocationB.toUri() + "'").run("insert into table tableb values (25,26)")
         .run("insert into table tableb values (28,29),(36,37),(42,43)").dump(primaryDbName, withClause);
 
     replica.load(replicatedDbName, primaryDbName, withClause).run("use " + replicatedDbName)
@@ -218,7 +218,7 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
     verifySuccessfulResult(tuple);
 
     // Alter the content of one of the file, keeping the bytes same
-    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationb, "fileb1.txt"))) {
+    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationB, "fileb1.txt"))) {
       outputStream.write("1,4\n".getBytes());
       outputStream.write("13,21\n".getBytes());
     }
@@ -233,7 +233,7 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
     verifySuccessfulResult(tuple);
 
     // Modify the content of a file without keeping the number of bytes same.
-    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationa, "filea1.txt"))) {
+    try (FSDataOutputStream outputStream = fs.create(new Path(externalTableLocationA, "filea1.txt"))) {
       outputStream.write("1,2\n".getBytes());
       outputStream.write("13,21\n".getBytes());
       outputStream.write("25,50\n".getBytes());
@@ -246,7 +246,7 @@ public class TestReplicationMigrationTool extends BaseReplicationAcrossInstances
     verifySuccessfulResult(tuple);
 
     // Open a file and check if it gets caught by the verify open file option.
-    FSDataOutputStream stream = fs.append(new Path(externalTableLocationa, "filea1.txt"));
+    FSDataOutputStream stream = fs.append(new Path(externalTableLocationA, "filea1.txt"));
     ToolRunner.run(conf, replTool,
         new String[] { "-dumpFilePath", tuple.dumpLocation, "-fileLevelCheck", "-verifyOpenFiles" });
     fail("Script didn't fail despite having an open file.");

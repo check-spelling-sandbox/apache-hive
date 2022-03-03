@@ -139,7 +139,7 @@ public class SnapshotUtils {
           LOG.warn("Couldn't create the snapshot {} under path {}. It doesn't exist", snapshotName, snapshotPath, e);
         } catch (SnapshotException e) {
           if (e.getMessage().contains("the snapshot does not exist") || e.getMessage()
-              .contains("Directory is not a snapshottable directory")) {
+              .contains("Directory is not a snapshotable directory")) {
             return true;
           }
         }
@@ -159,7 +159,7 @@ public class SnapshotUtils {
    */
   public static void disallowSnapshot(DistributedFileSystem dfs, Path snapshotPath) {
     try {
-      // Check if the directory is snapshottable.
+      // Check if the directory is snapshotable.
       if (dfs.getFileStatus(snapshotPath).isSnapshotEnabled()) {
         dfs.disallowSnapshot(snapshotPath);
       }
@@ -175,7 +175,7 @@ public class SnapshotUtils {
    * @param conf Hive Configuration.
    */
   public static void allowSnapshot(DistributedFileSystem dfs, Path snapshotPath, HiveConf conf) throws IOException {
-    // Check if the directory is already snapshottable.
+    // Check if the directory is already snapshotable.
     Retryable retryable = Retryable.builder().withHiveConf(conf).withRetryOnException(IOException.class)
         .withFailOnException(SnapshotException.class).build();
     try {

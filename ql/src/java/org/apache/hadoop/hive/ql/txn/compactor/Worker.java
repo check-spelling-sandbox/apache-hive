@@ -668,7 +668,7 @@ public class Worker extends RemoteCompactorThread implements MetaStoreThread {
     private long lockId = 0;
 
     private TxnStatus status = TxnStatus.UNKNOWN;
-    private boolean succeessfulCompaction = false;
+    private boolean successfulCompaction = false;
     private ScheduledExecutorService heartbeatExecutor;
 
     /**
@@ -704,7 +704,7 @@ public class Worker extends RemoteCompactorThread implements MetaStoreThread {
      * Mark compaction as successful. This means the txn will be committed; otherwise it will be aborted.
      */
     void wasSuccessful() {
-      this.succeessfulCompaction = true;
+      this.successfulCompaction = true;
     }
 
     /**
@@ -715,7 +715,7 @@ public class Worker extends RemoteCompactorThread implements MetaStoreThread {
       //the transaction is about to close, we can stop heartbeating regardless of it's state
       shutdownHeartbeater();
       if (status != TxnStatus.UNKNOWN) {
-        if (succeessfulCompaction) {
+        if (successfulCompaction) {
           commit();
         } else {
           abort();

@@ -130,7 +130,7 @@ public class TestTaskExecutorService {
   }
 
   private void testPreemptionHelper(
-      MockRequest r1, MockRequest r2, boolean isPreemted) throws InterruptedException {
+      MockRequest r1, MockRequest r2, boolean isPreempted) throws InterruptedException {
     TaskExecutorServiceForTest taskExecutorService = new TaskExecutorServiceForTest(1, 2,
         ShortestJobFirstComparator.class.getName(), true, mockMetrics);
     taskExecutorService.init(new Configuration());
@@ -144,7 +144,7 @@ public class TestTaskExecutorService {
       // Verify r1 was preempted. Also verify that it finished (single executor), otherwise
       // r2 could have run anyway.
       r1.awaitEnd();
-      assertEquals(isPreemted, r1.wasPreempted());
+      assertEquals(isPreempted, r1.wasPreempted());
       assertTrue(r1.hasFinished());
 
       r2.complete();
@@ -289,7 +289,7 @@ public class TestTaskExecutorService {
       TaskWrapper taskWrapper2 = taskExecutorService.knownTasks.get(fragmentId2);
       TaskWrapper taskWrapper3 = taskExecutorService.knownTasks.get(fragmentId3);
 
-      // r2 is finishable now, so it should go to back of pre-emption queue.
+      // r2 is finishable now, so it should go to back of preemption queue.
       taskExecutorService.finishableStateUpdated(taskWrapper2, true);
       taskWrapper = taskExecutorService.preemptionQueue.peek();
       assertNotNull(taskWrapper);
@@ -299,7 +299,7 @@ public class TestTaskExecutorService {
       assertFalse(taskWrapper.canFinishForPriority());
       assertEquals(3, taskExecutorService.preemptionQueue.size());
 
-      // r1 is finishable now, so it should go to back of pre-emption queue.
+      // r1 is finishable now, so it should go to back of preemption queue.
       taskExecutorService.finishableStateUpdated(taskWrapper1, true);
       taskWrapper = taskExecutorService.preemptionQueue.peek();
       assertNotNull(taskWrapper);
@@ -309,7 +309,7 @@ public class TestTaskExecutorService {
       assertFalse(taskWrapper.canFinishForPriority());
       assertEquals(3, taskExecutorService.preemptionQueue.size());
 
-      // r3 is finishable now, so it should go to back of pre-emption queue.
+      // r3 is finishable now, so it should go to back of preemption queue.
       taskExecutorService.finishableStateUpdated(taskWrapper3, true);
       taskWrapper = taskExecutorService.preemptionQueue.peek();
       assertNotNull(taskWrapper);
@@ -348,7 +348,7 @@ public class TestTaskExecutorService {
       assertEquals(fragmentId3, taskWrapper.getRequestId());
       assertFalse(taskWrapper.canFinishForPriority());
       assertEquals(2, taskExecutorService.preemptionQueue.size());
-      // make sure the task is not added twice to pre-emption queue
+      // make sure the task is not added twice to preemption queue
       taskExecutorService.tryScheduleUnderLock(taskWrapper);
       assertEquals(2, taskExecutorService.preemptionQueue.size());
 

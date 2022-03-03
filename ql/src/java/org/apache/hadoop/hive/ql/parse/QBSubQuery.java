@@ -56,7 +56,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
       }
 
       switch(opNode.getType()) {
-        // opNode's type is always either KW_EXISTS or KW_IN never NOTEXISTS or NOTIN
+        // opNode's type is always either KW_EXISTS or KW_IN never NONEXISTENT or NOTIN
         //  to figure this out we need to check it's grand parent's parent
       case HiveParser.KW_EXISTS:
         if(opNode.getParent().getParent().getParent() != null
@@ -64,7 +64,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
           return NOT_EXISTS;
         }
         return EXISTS;
-      case HiveParser.TOK_SUBQUERY_OP_NOTEXISTS:
+      case HiveParser.TOK_SUBQUERY_OP_NONEXISTENT:
         return NOT_EXISTS;
       case HiveParser.KW_IN:
         if(opNode.getParent().getParent().getParent() != null
@@ -460,7 +460,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
   private ASTNode joinConditionAST;
   private JoinType joinType;
   private ASTNode postJoinConditionAST;
-  private int numCorrExprsinSQ;
+  private int numCorrExpressionSQ;
   private List<ASTNode> subQueryJoinAliasExprs;
   private transient final ASTNodeOrigin originalSQASTOrigin;
 
@@ -491,7 +491,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
     this.outerQueryId = outerQueryId;
     this.sqIdx = sqIdx;
     this.alias = "sq_" + this.sqIdx;
-    this.numCorrExprsinSQ = 0;
+    this.numCorrExpressionSQ = 0;
     this.numOuterCorrExprsForHaving = 0;
     String s = ctx.getTokenRewriteStream().toString(
         originalSQAST.getTokenStartIndex(), originalSQAST.getTokenStopIndex());
@@ -618,7 +618,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
      * correlated SubQuery, the SubQuery always returns 1 row.
      */
       // Following is special cases for different type of subqueries which have aggregate and implicit group by
-      // and are correlatd
+      // and are correlated
       // * SCALAR - This should return true since later in subquery remove
       //              rule we need to know about this case.
       // * IN - always allowed, BUT returns true for cases with aggregate other than COUNT since later in subquery remove
@@ -851,7 +851,7 @@ public class QBSubQuery implements ISubQueryJoinInfo {
   }
 
   String getNextCorrExprAlias() {
-    return "sq_corr_" + numCorrExprsinSQ++;
+    return "sq_corr_" + numCorrExpressionSQ++;
   }
 
   /*
@@ -953,9 +953,9 @@ public class QBSubQuery implements ISubQueryJoinInfo {
             rewriteCorrConjunctForHaving(conjunctAST, false, outerQueryAlias,
                 parentQueryRR, conjunct.getRightOuterColInfo());
           }
-          ASTNode joinPredciate = SubQueryUtils.alterCorrelatedPredicate(
+          ASTNode joinPredicate = SubQueryUtils.alterCorrelatedPredicate(
               conjunctAST, sqExprForCorr, true);
-          joinConditionAST = SubQueryUtils.andAST(joinConditionAST, joinPredciate);
+          joinConditionAST = SubQueryUtils.andAST(joinConditionAST, joinPredicate);
           subQueryJoinAliasExprs.add(sqExprForCorr);
           ASTNode selExpr = SubQueryUtils.createSelectItem(conjunct.getLeftExpr(), sqExprAlias);
           selectClause.addChild(selExpr);
@@ -977,9 +977,9 @@ public class QBSubQuery implements ISubQueryJoinInfo {
             rewriteCorrConjunctForHaving(conjunctAST, true, outerQueryAlias,
                 parentQueryRR, conjunct.getLeftOuterColInfo());
           }
-          ASTNode joinPredciate = SubQueryUtils.alterCorrelatedPredicate(
+          ASTNode joinPredicate = SubQueryUtils.alterCorrelatedPredicate(
               conjunctAST, sqExprForCorr, false);
-          joinConditionAST = SubQueryUtils.andAST(joinConditionAST, joinPredciate);
+          joinConditionAST = SubQueryUtils.andAST(joinConditionAST, joinPredicate);
           subQueryJoinAliasExprs.add(sqExprForCorr);
           ASTNode selExpr = SubQueryUtils.createSelectItem(conjunct.getRightExpr(), sqExprAlias);
           selectClause.addChild(selExpr);

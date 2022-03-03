@@ -45,11 +45,11 @@ public interface HiveAccessController {
       throws HiveAuthzPluginException, HiveAccessControlException;
 
   void grantRole(List<HivePrincipal> hivePrincipals, List<String> roles, boolean grantOption,
-      HivePrincipal grantorPrinc)
+      HivePrincipal grantorPrincipal)
           throws HiveAuthzPluginException, HiveAccessControlException;
 
   void revokeRole(List<HivePrincipal> hivePrincipals, List<String> roles, boolean grantOption,
-      HivePrincipal grantorPrinc)
+      HivePrincipal grantorPrincipal)
           throws HiveAuthzPluginException, HiveAccessControlException;
 
   List<String> getAllRoles()

@@ -163,7 +163,7 @@ public class VectorizedReadUtils {
     if (task.residual() != null) {
       Expression boundFilter = Binder.bind(currentSchema.asStruct(), task.residual(), false);
 
-      // Note the use of the unshaded version of this class here (required for SARG deseralization later)
+      // Note the use of the unshaded version of this class here (required for SARG deserialization later)
       org.apache.hadoop.hive.ql.io.sarg.SearchArgument sarg =
           ExpressionToOrcSearchArgument.convert(boundFilter, readOrcSchema);
       if (sarg != null) {

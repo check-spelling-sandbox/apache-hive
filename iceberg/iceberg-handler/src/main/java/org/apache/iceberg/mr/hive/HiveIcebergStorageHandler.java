@@ -481,7 +481,7 @@ public class HiveIcebergStorageHandler implements HiveStoragePredicateHandler, H
   /**
    * Returns the catalog name serialized to the configuration.
    * @param config The configuration used to get the data from
-   * @param name The name of the table we neeed as returned by TableDesc.getTableName()
+   * @param name The name of the table we need as returned by TableDesc.getTableName()
    * @return catalog name
    */
   public static String catalogName(Configuration config, String name) {

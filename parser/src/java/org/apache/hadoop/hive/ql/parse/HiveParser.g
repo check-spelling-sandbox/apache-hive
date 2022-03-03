@@ -394,7 +394,7 @@ TOK_WINDOWRANGE;
 TOK_SUBQUERY_EXPR;
 TOK_SUBQUERY_OP;
 TOK_SUBQUERY_OP_NOTIN;
-TOK_SUBQUERY_OP_NOTEXISTS;
+TOK_SUBQUERY_OP_NONEXISTENT;
 TOK_DB_TYPE;
 TOK_TABLE_TYPE;
 TOK_CTE;
@@ -905,7 +905,7 @@ explainOption
     | KW_REOPTIMIZATION
     | KW_LOCKS
     | KW_AST
-    | (KW_VECTORIZATION vectorizationOnly? vectorizatonDetail?)
+    | (KW_VECTORIZATION vectorizationOnly? vectorizationDetail?)
     | KW_DEBUG
     | KW_DDL
     ;
@@ -917,7 +917,7 @@ vectorizationOnly
     -> ^(TOK_ONLY)
     ;
 
-vectorizatonDetail
+vectorizationDetail
 @init { pushMsg("vectorization's detail level clause", state); }
 @after { popMsg(state); }
     : KW_SUMMARY
@@ -1506,11 +1506,11 @@ privObjectCols
 privilegeList
 @init {pushMsg("grant privilege list", state);}
 @after {popMsg(state);}
-    : privlegeDef (COMMA privlegeDef)*
-    -> ^(TOK_PRIVILEGE_LIST privlegeDef+)
+    : privilegeDef (COMMA privilegeDef)*
+    -> ^(TOK_PRIVILEGE_LIST privilegeDef+)
     ;
 
-privlegeDef
+privilegeDef
 @init {pushMsg("grant privilege", state);}
 @after {popMsg(state);}
     : privilegeType (LPAREN cols=columnNameList RPAREN)?
@@ -1869,7 +1869,7 @@ columnNameTransformConstraint
     ;
 
 partitionTransformType
-@init {pushMsg("partitition transform type specification", state); }
+@init {pushMsg("partition transform type specification", state); }
 @after { popMsg(state); }
     : columnName
     -> {containExcludedCharForCreateTableColumnName($columnName.text)}? {throwColumnNameException()}
@@ -2517,9 +2517,9 @@ setOperator
 
 queryStatementExpression
     :
-    /* Would be nice to do this as a gated semantic perdicate
+    /* Would be nice to do this as a gated semantic predicate
        But the predicate gets pushed as a lookahead decision.
-       Calling rule doesnot know about topLevel
+       Calling rule does not know about topLevel
     */
     (w=withClause)?
     queryStatementExpressionBody {
@@ -2774,7 +2774,7 @@ deleteStatement
    KW_DELETE KW_FROM tableName (whereClause)? -> ^(TOK_DELETE_FROM tableName whereClause?)
    ;
 
-/*SET <columName> = (3 + col2)*/
+/*SET <columnName> = (3 + col2)*/
 columnAssignmentClause
    :
    tableOrColumn EQUAL^ precedencePlusExpression

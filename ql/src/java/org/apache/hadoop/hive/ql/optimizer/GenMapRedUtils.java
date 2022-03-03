@@ -607,7 +607,7 @@ public final class GenMapRedUtils {
         parseCtx.getGlobalLimitCtx().disableOpt();
       } else if (listBucketingPruner != null) {
         assert (sampleDescr == null) : "Sampling and list bucketing can't coexist.";
-        /* Use list bucketing prunner's path. */
+        /* Use list bucketing pruner's path. */
         paths = ListBucketingPruner.prune(parseCtx, part, listBucketingPruner);
       } else {
         // Now we only try the first partition, if the first partition doesn't
@@ -802,7 +802,7 @@ public final class GenMapRedUtils {
 
   /**
    * Set key and value descriptor
-   * @param work RedueWork
+   * @param work ReduceWork
    * @param rs ReduceSinkOperator
    */
   public static void setKeyAndValueDesc(ReduceWork work, ReduceSinkOperator rs) {
@@ -1085,7 +1085,7 @@ public final class GenMapRedUtils {
     TableDesc tt_desc = PlanUtils.getIntermediateFileTableDesc(PlanUtils
         .getFieldSchemasFromRowSchema(parent.getSchema(), "temporarycol"));
 
-    // Create the temporary file, its corresponding FileSinkOperaotr, and
+    // Create the temporary file, its corresponding FileSinkOperator, and
     // its corresponding TableScanOperator.
     TableScanOperator tableScanOp =
         createTemporaryFile(parent, op, taskTmpDir, tt_desc, parseCtx);

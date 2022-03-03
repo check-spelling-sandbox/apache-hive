@@ -477,7 +477,7 @@ public class TestTxnHandler {
   }
 
   @Test
-  public void testLockDifferentTableDoesntLockPartition() throws Exception {
+  public void testLockDifferentTableDoesNotLockPartition() throws Exception {
     // Test that locking a table prevents locking of partitions of the table
     LockComponent comp = new LockComponent(LockType.EXCLUSIVE, LockLevel.DB, "mydb");
     comp.setTablename("mytable");
@@ -982,7 +982,7 @@ public class TestTxnHandler {
   public void testCheckLockNoSuchLock() throws Exception {
     try {
       txnHandler.checkLock(new CheckLockRequest(23L));
-      fail("Allowed to check lock on non-existent lock");
+      fail("Allowed to check lock on nonexistent lock");
     } catch (NoSuchLockException e) {
     }
   }
@@ -1377,7 +1377,7 @@ public class TestTxnHandler {
 
   @Test
   public void showLocks() throws Exception {
-    long begining = System.currentTimeMillis();
+    long beginning = System.currentTimeMillis();
     LockComponent comp = new LockComponent(LockType.EXCLUSIVE, LockLevel.DB, "mydb");
     comp.setOperationType(DataOperationType.NO_TXN);
     List<LockComponent> components = new ArrayList<LockComponent>(1);
@@ -1420,9 +1420,9 @@ public class TestTxnHandler {
         assertEquals(LockState.ACQUIRED, lock.getState());
         assertEquals(LockType.EXCLUSIVE, lock.getType());
         assertTrue(lock.toString(), 0 != lock.getLastheartbeat());
-        assertTrue("Expected acquired at " + lock.getAcquiredat() + " to be between " + begining
+        assertTrue("Expected acquired at " + lock.getAcquiredat() + " to be between " + beginning
             + " and " + System.currentTimeMillis(),
-            begining <= lock.getAcquiredat() && System.currentTimeMillis() >= lock.getAcquiredat());
+            beginning <= lock.getAcquiredat() && System.currentTimeMillis() >= lock.getAcquiredat());
         assertEquals("me", lock.getUser());
         assertEquals("localhost", lock.getHostname());
         saw[0] = true;
@@ -1446,9 +1446,9 @@ public class TestTxnHandler {
         assertEquals("yourpartition=yourvalue", lock.getPartname());
         assertEquals(LockState.ACQUIRED, lock.getState());
         assertEquals(LockType.SHARED_READ, lock.getType());
-        assertTrue(lock.toString(), begining <= lock.getLastheartbeat() &&
+        assertTrue(lock.toString(), beginning <= lock.getLastheartbeat() &&
             System.currentTimeMillis() >= lock.getLastheartbeat());
-        assertTrue(begining <= lock.getAcquiredat() &&
+        assertTrue(beginning <= lock.getAcquiredat() &&
             System.currentTimeMillis() >= lock.getAcquiredat());
         assertEquals("you", lock.getUser());
         assertEquals("remotehost", lock.getHostname());
@@ -1568,7 +1568,7 @@ public class TestTxnHandler {
   }
 
   /**
-   * This cannnot be run against Derby (thus in UT) but it can run against MySQL.
+   * This cannot be run against Derby (thus in UT) but it can run against MySQL.
    * 1. add to metastore/pom.xml
    *     <dependency>
    *      <groupId>mysql</groupId>

@@ -138,7 +138,7 @@ public class GenTezUtils {
     tezWork.add(reduceWork);
 
     TezEdgeProperty edgeProp;
-    EdgeType edgeType = determineEdgeType(context.preceedingWork, reduceWork, reduceSink);
+    EdgeType edgeType = determineEdgeType(context.precedingWork, reduceWork, reduceSink);
     if (reduceWork.isAutoReduceParallelism()) {
       edgeProp =
           new TezEdgeProperty(context.conf, edgeType, true, reduceWork.isSlowStart(),
@@ -151,7 +151,7 @@ public class GenTezUtils {
     reduceWork.setEdgePropRef(edgeProp);
 
     tezWork.connect(
-        context.preceedingWork,
+        context.precedingWork,
         reduceWork, edgeProp);
     context.connectedReduceSinks.add(reduceSink);
 
@@ -170,7 +170,7 @@ public class GenTezUtils {
     // remember which parent belongs to which tag
     int tag = reduceSink.getConf().getTag();
     reduceWork.getTagToInput().put(tag == -1 ? 0 : tag,
-         context.preceedingWork.getName());
+         context.precedingWork.getName());
 
     // remember the output name of the reduce sink
     reduceSink.getConf().setOutputName(reduceWork.getName());
@@ -224,7 +224,7 @@ public class GenTezUtils {
    * It does the following simplifications:
    * <ul>
    *  <li> hides UNION operator parents which are unrelated to the current set of roots
-   *  <li> hides childs from RS and FS operators
+   *  <li> hides children from RS and FS operators
    * <ul>
    */
   static class TruncatedOperatorTree implements AutoCloseable {
@@ -563,7 +563,7 @@ public class GenTezUtils {
   }
 
   /**
-   * getEncosingWork finds the BaseWork any given operator belongs to.
+   * getEncodingWork finds the BaseWork any given operator belongs to.
    */
   public static BaseWork getEnclosingWork(Operator<?> op, GenTezProcContext procCtx) {
     List<Operator<?>> ops = new ArrayList<Operator<?>>();
@@ -609,7 +609,7 @@ public class GenTezUtils {
     return child;
   }
 
-  public static EdgeType determineEdgeType(BaseWork preceedingWork, BaseWork followingWork,
+  public static EdgeType determineEdgeType(BaseWork precedingWork, BaseWork followingWork,
       ReduceSinkOperator reduceSinkOperator) {
     // The 1-1 edge should also work for sorted cases, however depending on the details of the shuffle
     // this might end up writing multiple compressed files or end up using an in-memory partitioned kv writer
@@ -663,12 +663,12 @@ public class GenTezUtils {
     }
 
     TableScanOperator ts = sjInfo.getTsOp();
-    LOG.debug("ResduceSink " + rs + " to TableScan " + ts);
+    LOG.debug("ReduceSink " + rs + " to TableScan " + ts);
 
     BaseWork parentWork = rsWorkList.get(0);
     BaseWork childWork = procCtx.rootToWorkMap.get(ts);
 
-    // Connect parent/child work with a brodacast edge.
+    // Connect parent/child work with a broadcast edge.
     LOG.debug("Connecting Baswork - " + parentWork.getName() + " to " + childWork.getName());
     TezEdgeProperty edgeProperty = new TezEdgeProperty(EdgeType.BROADCAST_EDGE);
     TezWork tezWork = procCtx.currentTask.getWork();
@@ -748,7 +748,7 @@ public class GenTezUtils {
     context.getRsToSemiJoinBranchInfo().remove(rs);
   }
 
-  /** Find out if this predicate constains the synthetic predicate to be removed */
+  /** Find out if this predicate constrains the synthetic predicate to be removed */
   private static boolean removeSemiJoinPredicate(ParseContext context,
           ReduceSinkOperator rs, ExprNodeDesc nodeToRemove) {
     boolean remove = false;

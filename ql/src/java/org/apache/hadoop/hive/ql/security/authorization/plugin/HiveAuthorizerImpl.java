@@ -69,14 +69,14 @@ public class HiveAuthorizerImpl extends AbstractHiveAuthorizer {
 
   @Override
   public void grantRole(List<HivePrincipal> hivePrincipals, List<String> roles,
-      boolean grantOption, HivePrincipal grantorPrinc) throws HiveAuthzPluginException, HiveAccessControlException {
-    accessController.grantRole(hivePrincipals, roles, grantOption, grantorPrinc);
+      boolean grantOption, HivePrincipal grantorPrincipal) throws HiveAuthzPluginException, HiveAccessControlException {
+    accessController.grantRole(hivePrincipals, roles, grantOption, grantorPrincipal);
   }
 
   @Override
   public void revokeRole(List<HivePrincipal> hivePrincipals, List<String> roles,
-      boolean grantOption, HivePrincipal grantorPrinc) throws HiveAuthzPluginException, HiveAccessControlException {
-    accessController.revokeRole(hivePrincipals, roles, grantOption, grantorPrinc);
+      boolean grantOption, HivePrincipal grantorPrincipal) throws HiveAuthzPluginException, HiveAccessControlException {
+    accessController.revokeRole(hivePrincipals, roles, grantOption, grantorPrincipal);
   }
 
   @Override

@@ -197,7 +197,7 @@ public class ReplLoadWork implements Serializable, ReplLoadWorkMBean {
     return null;
   }
 
-  // Unregisters MBeans by forming the Metrics same as how the Hadoop code forms during MBean registeration.
+  // Unregisters MBeans by forming the Metrics same as how the Hadoop code forms during MBean registration.
   private void unRegisterMBeanIfRegistered(String serviceName, String nameName,
       Map<String, String> additionalParameters) {
 

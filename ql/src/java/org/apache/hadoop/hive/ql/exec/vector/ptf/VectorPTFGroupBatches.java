@@ -153,12 +153,12 @@ public class VectorPTFGroupBatches extends PTFPartition {
   /**
    * PartitionMetrics encapsulates some insight about the data within a PTF partition. It's quite
    * cheap to store and maintain, but contains important information about data characteristics. The
-   * result is printed after every partition in order to make user able to finetune vectorized PTF
+   * result is printed after every partition in order to make user able to fine tune vectorized PTF
    * for better performance (e.g. more memory stored in memory).
    */
   class PartitionMetrics {
     /**
-     * This contains the total number of batches recieved for buffering in non-streaming mode.
+     * This contains the total number of batches received for buffering in non-streaming mode.
      */
     public int totalNumberOfBatches;
     /**

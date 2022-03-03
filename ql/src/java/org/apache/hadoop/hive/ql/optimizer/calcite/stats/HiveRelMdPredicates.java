@@ -122,7 +122,7 @@ public class HiveRelMdPredicates extends RelMdPredicates {
     RelOptPredicateList childInfo = mq.getPulledUpPredicates(child);
 
     List<RexNode> projectPullUpPredicates = new ArrayList<RexNode>();
-    HashMultimap<Integer, Integer> inpIndxToOutIndxMap = HashMultimap.create();
+    HashMultimap<Integer, Integer> inpIndexToOutIndexMap = HashMultimap.create();
 
     ImmutableBitSet.Builder columnsMappedBuilder = ImmutableBitSet.builder();
     Mapping m = Mappings.create(MappingType.PARTIAL_FUNCTION, child.getRowType().getFieldCount(),
@@ -132,7 +132,7 @@ public class HiveRelMdPredicates extends RelMdPredicates {
       if (o.e instanceof RexInputRef) {
         int sIdx = ((RexInputRef) o.e).getIndex();
         m.set(sIdx, o.i);
-        inpIndxToOutIndxMap.put(sIdx, o.i);
+        inpIndexToOutIndexMap.put(sIdx, o.i);
         columnsMappedBuilder.set(sIdx);
       }
     }
@@ -414,7 +414,7 @@ public class HiveRelMdPredicates extends RelMdPredicates {
     }
 
     private void infer(List<RexNode> predicates, Set<String> allExprsDigests,
-        List<RexNode> inferedPredicates, List<RexNode> nonFieldsPredicates,
+        List<RexNode> inferredPredicates, List<RexNode> nonFieldsPredicates,
         boolean includeEqualityInference, ImmutableBitSet inferringFields) {
       for (RexNode r : predicates) {
         if (!includeEqualityInference
@@ -430,7 +430,7 @@ public class HiveRelMdPredicates extends RelMdPredicates {
             if (inferringFields.contains(RelOptUtil.InputFinder.bits(tr))
                 && !allExprsDigests.contains(tr.toString())
                 && !isAlwaysTrue(tr)) {
-              inferedPredicates.add(tr);
+              inferredPredicates.add(tr);
               allExprsDigests.add(tr.toString());
             }
           }

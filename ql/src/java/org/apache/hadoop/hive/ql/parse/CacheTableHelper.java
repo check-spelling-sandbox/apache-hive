@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  *
  * Because this class is only responsible for cache population, it is not a requirement for
  * a caller to supply all the tables necessary for the query. It is also not a requirement
- * for the tables to be part of the query. Of course, the query qill benefit if those
+ * for the tables to be part of the query. Of course, the query will benefit if those
  * conditions were true, but if the table is not in the cache, a later call fetching the writeids
  * will hit the HMS server and will not fail.
  *
@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * a requirement for the tables to be part of the query. Later on in the query, this class
  * will be called on the view level via the populateCacheForView call. At that point, if
  * something changed, it will populate the cache with the newly detected tables. It will also
- * change the underying table information for the view to optimize the next query using
+ * change the underlying table information for the view to optimize the next query using
  * the view.
  */
 public class CacheTableHelper {
@@ -114,7 +114,7 @@ public class CacheTableHelper {
    * Populates the cache for the given table pairs associated with a viewName.
    * If the table names provided match the table names that we think are associated
    * with the view, we just return, because we presume that they have already been
-   * popuated via the "populateCache" method. If they are different, we populate the cache
+   * populated via the "populateCache" method. If they are different, we populate the cache
    * with the new associated tables and change our associated tables for the view.
    */
   public void populateCacheForView(List<Pair<String, String>> tables, HiveConf conf,

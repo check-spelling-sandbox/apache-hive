@@ -77,7 +77,7 @@ public class TestHiveCommits extends HiveTableBaseTest {
   }
 
   /**
-   * Pretends we throw an error while persisting that actually fails to commit serverside
+   * Pretends we throw an error while persisting that actually fails to commit server-side
    */
   @Test
   public void testThriftExceptionFailureOnCommit() throws TException, InterruptedException {
@@ -114,7 +114,7 @@ public class TestHiveCommits extends HiveTableBaseTest {
   }
 
   /**
-   * Pretends we throw an error while persisting that actually does commit serverside
+   * Pretends we throw an error while persisting that actually does commit server-side
    */
   @Test
   public void testThriftExceptionSuccessOnCommit() throws TException, InterruptedException {
@@ -228,7 +228,7 @@ public class TestHiveCommits extends HiveTableBaseTest {
    * if their commit succeeded or not
    *
    * Timeline:
-   *   Client 1 commits which throws an exception but suceeded
+   *   Client 1 commits which throws an exception but succeeded
    *   Client 1's lock expires while waiting to do the recheck for commit success
    *   Client 2 acquires a lock, commits successfully on top of client 1's commit and release lock
    *   Client 1 check's to see if their commit was successful

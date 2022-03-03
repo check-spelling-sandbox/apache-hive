@@ -253,7 +253,7 @@ class ThriftHiveMetastoreIf : virtual public  ::facebook::fb303::FacebookService
   virtual void create_wm_trigger(WMCreateTriggerResponse& _return, const WMCreateTriggerRequest& request) = 0;
   virtual void alter_wm_trigger(WMAlterTriggerResponse& _return, const WMAlterTriggerRequest& request) = 0;
   virtual void drop_wm_trigger(WMDropTriggerResponse& _return, const WMDropTriggerRequest& request) = 0;
-  virtual void get_triggers_for_resourceplan(WMGetTriggersForResourePlanResponse& _return, const WMGetTriggersForResourePlanRequest& request) = 0;
+  virtual void get_triggers_for_resourceplan(WMGetTriggersForResourcePlanResponse& _return, const WMGetTriggersForResourcePlanRequest& request) = 0;
   virtual void create_wm_pool(WMCreatePoolResponse& _return, const WMCreatePoolRequest& request) = 0;
   virtual void alter_wm_pool(WMAlterPoolResponse& _return, const WMAlterPoolRequest& request) = 0;
   virtual void drop_wm_pool(WMDropPoolResponse& _return, const WMDropPoolRequest& request) = 0;
@@ -1034,7 +1034,7 @@ class ThriftHiveMetastoreNull : virtual public ThriftHiveMetastoreIf , virtual p
   void drop_wm_trigger(WMDropTriggerResponse& /* _return */, const WMDropTriggerRequest& /* request */) {
     return;
   }
-  void get_triggers_for_resourceplan(WMGetTriggersForResourePlanResponse& /* _return */, const WMGetTriggersForResourePlanRequest& /* request */) {
+  void get_triggers_for_resourceplan(WMGetTriggersForResourcePlanResponse& /* _return */, const WMGetTriggersForResourcePlanRequest& /* request */) {
     return;
   }
   void create_wm_pool(WMCreatePoolResponse& /* _return */, const WMCreatePoolRequest& /* request */) {
@@ -28681,11 +28681,11 @@ class ThriftHiveMetastore_get_triggers_for_resourceplan_args {
   }
 
   virtual ~ThriftHiveMetastore_get_triggers_for_resourceplan_args() noexcept;
-  WMGetTriggersForResourePlanRequest request;
+  WMGetTriggersForResourcePlanRequest request;
 
   _ThriftHiveMetastore_get_triggers_for_resourceplan_args__isset __isset;
 
-  void __set_request(const WMGetTriggersForResourePlanRequest& val);
+  void __set_request(const WMGetTriggersForResourcePlanRequest& val);
 
   bool operator == (const ThriftHiveMetastore_get_triggers_for_resourceplan_args & rhs) const
   {
@@ -28710,7 +28710,7 @@ class ThriftHiveMetastore_get_triggers_for_resourceplan_pargs {
 
 
   virtual ~ThriftHiveMetastore_get_triggers_for_resourceplan_pargs() noexcept;
-  const WMGetTriggersForResourePlanRequest* request;
+  const WMGetTriggersForResourcePlanRequest* request;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -28732,13 +28732,13 @@ class ThriftHiveMetastore_get_triggers_for_resourceplan_result {
   }
 
   virtual ~ThriftHiveMetastore_get_triggers_for_resourceplan_result() noexcept;
-  WMGetTriggersForResourePlanResponse success;
+  WMGetTriggersForResourcePlanResponse success;
   NoSuchObjectException o1;
   MetaException o2;
 
   _ThriftHiveMetastore_get_triggers_for_resourceplan_result__isset __isset;
 
-  void __set_success(const WMGetTriggersForResourePlanResponse& val);
+  void __set_success(const WMGetTriggersForResourcePlanResponse& val);
 
   void __set_o1(const NoSuchObjectException& val);
 
@@ -28777,7 +28777,7 @@ class ThriftHiveMetastore_get_triggers_for_resourceplan_presult {
 
 
   virtual ~ThriftHiveMetastore_get_triggers_for_resourceplan_presult() noexcept;
-  WMGetTriggersForResourePlanResponse* success;
+  WMGetTriggersForResourcePlanResponse* success;
   NoSuchObjectException o1;
   MetaException o2;
 
@@ -34275,9 +34275,9 @@ class ThriftHiveMetastoreClient : virtual public ThriftHiveMetastoreIf, public  
   void drop_wm_trigger(WMDropTriggerResponse& _return, const WMDropTriggerRequest& request);
   void send_drop_wm_trigger(const WMDropTriggerRequest& request);
   void recv_drop_wm_trigger(WMDropTriggerResponse& _return);
-  void get_triggers_for_resourceplan(WMGetTriggersForResourePlanResponse& _return, const WMGetTriggersForResourePlanRequest& request);
-  void send_get_triggers_for_resourceplan(const WMGetTriggersForResourePlanRequest& request);
-  void recv_get_triggers_for_resourceplan(WMGetTriggersForResourePlanResponse& _return);
+  void get_triggers_for_resourceplan(WMGetTriggersForResourcePlanResponse& _return, const WMGetTriggersForResourcePlanRequest& request);
+  void send_get_triggers_for_resourceplan(const WMGetTriggersForResourcePlanRequest& request);
+  void recv_get_triggers_for_resourceplan(WMGetTriggersForResourcePlanResponse& _return);
   void create_wm_pool(WMCreatePoolResponse& _return, const WMCreatePoolRequest& request);
   void send_create_wm_pool(const WMCreatePoolRequest& request);
   void recv_create_wm_pool(WMCreatePoolResponse& _return);
@@ -37169,7 +37169,7 @@ class ThriftHiveMetastoreMultiface : virtual public ThriftHiveMetastoreIf, publi
     return;
   }
 
-  void get_triggers_for_resourceplan(WMGetTriggersForResourePlanResponse& _return, const WMGetTriggersForResourePlanRequest& request) {
+  void get_triggers_for_resourceplan(WMGetTriggersForResourcePlanResponse& _return, const WMGetTriggersForResourcePlanRequest& request) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -38269,9 +38269,9 @@ class ThriftHiveMetastoreConcurrentClient : virtual public ThriftHiveMetastoreIf
   void drop_wm_trigger(WMDropTriggerResponse& _return, const WMDropTriggerRequest& request);
   int32_t send_drop_wm_trigger(const WMDropTriggerRequest& request);
   void recv_drop_wm_trigger(WMDropTriggerResponse& _return, const int32_t seqid);
-  void get_triggers_for_resourceplan(WMGetTriggersForResourePlanResponse& _return, const WMGetTriggersForResourePlanRequest& request);
-  int32_t send_get_triggers_for_resourceplan(const WMGetTriggersForResourePlanRequest& request);
-  void recv_get_triggers_for_resourceplan(WMGetTriggersForResourePlanResponse& _return, const int32_t seqid);
+  void get_triggers_for_resourceplan(WMGetTriggersForResourcePlanResponse& _return, const WMGetTriggersForResourcePlanRequest& request);
+  int32_t send_get_triggers_for_resourceplan(const WMGetTriggersForResourcePlanRequest& request);
+  void recv_get_triggers_for_resourceplan(WMGetTriggersForResourcePlanResponse& _return, const int32_t seqid);
   void create_wm_pool(WMCreatePoolResponse& _return, const WMCreatePoolRequest& request);
   int32_t send_create_wm_pool(const WMCreatePoolRequest& request);
   void recv_create_wm_pool(WMCreatePoolResponse& _return, const int32_t seqid);

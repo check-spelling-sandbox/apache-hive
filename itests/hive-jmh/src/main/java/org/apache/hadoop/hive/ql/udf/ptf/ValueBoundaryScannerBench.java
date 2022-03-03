@@ -60,7 +60,7 @@ public class ValueBoundaryScannerBench {
       TimestampWritableV2 v1 = new TimestampWritableV2(epochBytes, 0);
       TimestampWritableV2 v2 = new TimestampWritableV2(epochBytes, 0);
 
-      // prevalidate before heavy loop
+      // pre-validate before heavy loop
       Timestamp l1 = PrimitiveObjectInspectorUtils.getTimestamp(v1,
           (PrimitiveObjectInspector) expressionDef.getOI());
       Timestamp l2 = PrimitiveObjectInspectorUtils.getTimestamp(v2,
@@ -85,7 +85,7 @@ public class ValueBoundaryScannerBench {
       TimestampWritableV2 v1 = new TimestampWritableV2(epochBytes, 0);
       TimestampWritableV2 v2 = new TimestampWritableV2(epochBytes, 0);
 
-      // prevalidate before heavy loop
+      // pre-validate before heavy loop
       TimestampWritableV2 w1 = (TimestampWritableV2) v1;
       TimestampWritableV2 w2 = (TimestampWritableV2) v2;
       if (!w1.equals(w2)) {
@@ -106,7 +106,7 @@ public class ValueBoundaryScannerBench {
       TimestampWritableV2 v1 = new TimestampWritableV2(epochBytes, 0);
       TimestampWritableV2 v2 = new TimestampWritableV2(epochBytes, 0);
 
-      // prevalidate before heavy loop
+      // pre-validate before heavy loop
       TimestampWritableV2 w1 = (TimestampWritableV2) v1;
       TimestampWritableV2 w2 = (TimestampWritableV2) v2;
       if (!w1.equals(w2)) {

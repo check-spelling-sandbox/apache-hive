@@ -341,7 +341,7 @@ public class TestScheduledReplicationScenarios extends BaseReplicationScenariosA
       assertFalse(ReplUtils.isFirstIncPending(primary.getDatabase(sourceDbName).getParameters()));
       assertFalse(MetaStoreUtils.isDbBeingFailedOver(replica.getDatabase(replicaDbName)));
 
-      //Start failback from here.
+      //Start fallback from here.
       replica.run("alter  scheduled query repl_dump_p2 defined as repl dump " + replicaDbName +  " WITH(" + startFailoverClause + ')');
       primary.run("alter scheduled query repl_load_p2 defined as repl load "
               + replicaDbName + " INTO " + sourceDbName +  " WITH(" + startFailoverClause + ')');

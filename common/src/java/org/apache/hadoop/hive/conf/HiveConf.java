@@ -649,7 +649,7 @@ public class HiveConf extends Configuration {
             "Name of the source cluster for the replication."),
     REPL_TARGET_CLUSTER_NAME("hive.repl.target.cluster.name", null,
             "Name of the target cluster for the replication."),
-    REPL_RETRY_INTIAL_DELAY("hive.repl.retry.initial.delay", "60s",
+    REPL_RETRY_INITIAL_DELAY("hive.repl.retry.initial.delay", "60s",
       new TimeValidator(TimeUnit.SECONDS),
       "Initial Delay before retry starts."),
     REPL_RETRY_BACKOFF_COEFFICIENT("hive.repl.retry.backoff.coefficient", 1.2f,
@@ -4655,7 +4655,7 @@ public class HiveConf extends Configuration {
      * @deprecated Use MetastoreConf.SUPPORT_SPECIAL_CHARACTERS_IN_TABLE_NAMES
      */
     @Deprecated
-    HIVE_SUPPORT_SPECICAL_CHARACTERS_IN_TABLE_NAMES("hive.support.special.characters.tablename", true,
+    HIVE_SUPPORT_SPECIAL_CHARACTERS_IN_TABLE_NAMES("hive.support.special.characters.tablename", true,
         "This flag should be set to true to enable support for special characters in table names.\n"
         + "When it is set to false, only [a-zA-Z_0-9]+ are supported.\n"
         + "The supported special characters are %&'()*+,-./:;<=>?[]_|{}$^!~#@ and space. This flag applies only to"
@@ -5670,12 +5670,12 @@ public class HiveConf extends Configuration {
         (long) 10 * 1024 * 1024,
         "Maximum size in bytes that a single query result is allowed to use in the results cache directory"),
 
-    HIVE_NOTFICATION_EVENT_POLL_INTERVAL("hive.notification.event.poll.interval", "60s",
+    HIVE_NOTIFICATION_EVENT_POLL_INTERVAL("hive.notification.event.poll.interval", "60s",
         new TimeValidator(TimeUnit.SECONDS),
         "How often the notification log is polled for new NotificationEvents from the metastore." +
         "A nonpositive value means the notification log is never polled."),
 
-    HIVE_NOTFICATION_EVENT_CONSUMERS("hive.notification.event.consumers",
+    HIVE_NOTIFICATION_EVENT_CONSUMERS("hive.notification.event.consumers",
         "org.apache.hadoop.hive.ql.cache.results.QueryResultsCache$InvalidationEventConsumer",
         "Comma-separated list of class names extending EventConsumer," +
          "to handle the NotificationEvents retrieved by the notification event poll."),
@@ -6666,7 +6666,7 @@ public class HiveConf extends Configuration {
       ConfVars.HIVE_SCHEMA_EVOLUTION.varname,
       ConfVars.HIVE_SERVER2_LOGGING_OPERATION_LEVEL.varname,
       ConfVars.HIVE_SERVER2_THRIFT_RESULTSET_SERIALIZE_IN_TASKS.varname,
-      ConfVars.HIVE_SUPPORT_SPECICAL_CHARACTERS_IN_TABLE_NAMES.varname,
+      ConfVars.HIVE_SUPPORT_SPECIAL_CHARACTERS_IN_TABLE_NAMES.varname,
       ConfVars.JOB_DEBUG_CAPTURE_STACKTRACES.varname,
       ConfVars.JOB_DEBUG_TIMEOUT.varname,
       ConfVars.LLAP_IO_ENABLED.varname,

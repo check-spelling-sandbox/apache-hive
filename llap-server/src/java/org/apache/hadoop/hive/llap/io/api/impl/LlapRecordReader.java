@@ -887,7 +887,7 @@ class LlapRecordReader implements RecordReader<NullWritable, VectorizedRowBatch>
           newFilePhysicalColumnIds.add(i - 1);
         }
       }
-      LOG.debug("Adjusting file physical included columnd IDs based on ORC SchemaEvolution. Original: {}, Adjusted: {}",
+      LOG.debug("Adjusting file physical included column IDs based on ORC SchemaEvolution. Original: {}, Adjusted: {}",
           this.filePhysicalColumnIds, newFilePhysicalColumnIds);
       this.filePhysicalColumnIds = newFilePhysicalColumnIds;
     }

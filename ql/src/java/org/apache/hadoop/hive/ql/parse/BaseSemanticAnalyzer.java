@@ -259,7 +259,7 @@ public abstract class BaseSemanticAnalyzer {
                     .getText());
           break;
         default:
-          throw new AssertionError("Unkown Token: " + rowChild);
+          throw new AssertionError("Unknown Token: " + rowChild);
         }
       }
     }
@@ -522,7 +522,7 @@ public abstract class BaseSemanticAnalyzer {
   public static String getTableAlias(ASTNode node) throws SemanticException {
     // ptf node form is: ^(TOK_PTBLFUNCTION $name $alias?
     // partitionTableFunctionSource partitioningSpec? expression*)
-    // guranteed to have an alias here: check done in processJoin
+    // guaranteed to have an alias here: check done in processJoin
     if (node.getToken().getType() == HiveParser.TOK_PTBLFUNCTION) {
       return unescapeIdentifier(node.getChild(1).getText().toLowerCase());
     }
@@ -1866,7 +1866,7 @@ public abstract class BaseSemanticAnalyzer {
       throw new SemanticException(e.getMessage(), e);
     }
     if (tab == null && throwException) {
-      // getTable needs a refactor with all ~50 occurences
+      // getTable needs a refactor with all ~50 occurrences
       throw new SemanticException(ErrorMsg.INVALID_TABLE.getMsg(TableName.fromString(tblName, null, database).getNotEmptyDbTable()));
     }
     return tab;
@@ -1961,7 +1961,7 @@ public abstract class BaseSemanticAnalyzer {
   /**
    * Unparses the analyzed statement
    */
-  protected void executeUnparseTranlations() {
+  protected void executeUnparseTranslation() {
     UnparseTranslator unparseTranslator = new UnparseTranslator(conf);
     unparseTranslator.applyTranslations(ctx.getTokenRewriteStream());
   }

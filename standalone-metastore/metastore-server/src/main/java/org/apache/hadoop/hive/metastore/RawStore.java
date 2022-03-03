@@ -531,7 +531,7 @@ public interface RawStore extends Configurable {
    * @param dbName database to search in
    * @param pattern pattern to match
    * @param tableType type of table to look for
-   * @param limit Maximum number of tables to return (undeterministic set)
+   * @param limit Maximum number of tables to return (nondeterministic set)
    * @return list of table names, if any
    * @throws MetaException failure in querying the RDBMS
    */
@@ -2115,7 +2115,7 @@ public interface RawStore extends Configurable {
   /**
    * Returns details about a scheduled query by name.
    *
-   * @throws NoSuchObjectException if an object by the given name dosen't exists.
+   * @throws NoSuchObjectException if an object by the given name doesn't exists.
    */
   ScheduledQuery getScheduledQuery(ScheduledQueryKey scheduleKey) throws MetaException, NoSuchObjectException;
 

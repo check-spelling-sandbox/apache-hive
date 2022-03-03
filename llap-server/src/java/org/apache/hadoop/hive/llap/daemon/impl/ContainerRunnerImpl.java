@@ -177,7 +177,7 @@ public class ContainerRunnerImpl extends CompositeService implements ContainerRu
     tezHadoopShim = new HadoopShimsLoader(conf).getHadoopShim();
 
     LOG.info("ContainerRunnerImpl config: " +
-            "memoryPerExecutorDerviced=" + memoryPerExecutor
+            "memoryPerExecutorService=" + memoryPerExecutor
     );
   }
 
@@ -238,7 +238,7 @@ public class ContainerRunnerImpl extends CompositeService implements ContainerRu
 
     verifyJwtForExternalClient(request, qIdProto.getApplicationIdString(), fragmentIdString);
 
-    LOG.info("Queueing container for execution: fragemendId={}, {}", fragmentIdString,
+    LOG.info("Queueing container for execution: fragmentId={}, {}", fragmentIdString,
         stringifySubmitRequest(request, vertex));
 
     HistoryLogger.logFragmentStart(qIdProto.getApplicationIdString(), request.getContainerIdString(),

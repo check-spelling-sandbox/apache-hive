@@ -21,7 +21,7 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 
 /**
  * This UDF is packaged in a standalone jar to be used in {@link org.apache.hadoop.hive.ql.session.TestUdfClassLoaderAcrossSessions}
- * After changing this file, recompile and rejar it manually into DummyUDF.jar
+ * After changing this file, recompile and re-jar it manually into DummyUDF.jar
  * Run:
  * - javac -cp <hiveroot>/ql/target/hive-exec-<version>.jar DummyUDF.java
  * - jar cf DummyUDF.jar DummyUDF.class

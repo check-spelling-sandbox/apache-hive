@@ -69,7 +69,7 @@ public class DataConnectorProviderFactory {
 
     try {
       connector = hmsHandler.get_dataconnector_core(db.getConnector_name());
-    } catch (NoSuchObjectException notexists) {
+    } catch (NoSuchObjectException nonexistent) {
       throw new MetaException("Data connector " + db.getConnector_name() + " associated with database "
           + db.getName() + " does not exist");
     }

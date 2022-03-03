@@ -589,7 +589,7 @@ struct FileMetadata {
   3: list<binary> data
 }
 
-// this field can be used to store repeatitive information
+// this field can be used to store repetitive information
 // (like network addresses in filemetadata). Instead of
 // sending the same object repeatedly, we can send the indices
 // corresponding to the object in this list.
@@ -1864,12 +1864,12 @@ struct WMDropTriggerRequest {
 struct WMDropTriggerResponse {
 }
 
-struct WMGetTriggersForResourePlanRequest {
+struct WMGetTriggersForResourcePlanRequest {
   1: optional string resourcePlanName;
   2: optional string ns;
 }
 
-struct WMGetTriggersForResourePlanResponse {
+struct WMGetTriggersForResourcePlanResponse {
   1: optional list<WMTrigger> triggers;
 }
 
@@ -2415,7 +2415,7 @@ service ThriftHiveMetastore extends fb303.FacebookService
   list<string> get_dataconnectors() throws(1:MetaException o1)
   void alter_dataconnector(1:string name, 2:DataConnector connector) throws(1:MetaException o1, 2:NoSuchObjectException o2)
 
-    // returns the type with given name (make seperate calls for the dependent types if needed)
+    // returns the type with given name (make separate calls for the dependent types if needed)
   Type get_type(1:string name)  throws(1:MetaException o1, 2:NoSuchObjectException o2)
   bool create_type(1:Type type) throws(1:AlreadyExistsException o1, 2:InvalidObjectException o2, 3:MetaException o3)
   bool drop_type(1:string type) throws(1:MetaException o1, 2:NoSuchObjectException o2)
@@ -3013,7 +3013,7 @@ PartitionsResponse get_partitions_req(1:PartitionsRequest req)
   WMDropTriggerResponse drop_wm_trigger(1:WMDropTriggerRequest request)
       throws(1:NoSuchObjectException o1, 2:InvalidOperationException o2, 3:MetaException o3)
 
-  WMGetTriggersForResourePlanResponse get_triggers_for_resourceplan(1:WMGetTriggersForResourePlanRequest request)
+  WMGetTriggersForResourcePlanResponse get_triggers_for_resourceplan(1:WMGetTriggersForResourcePlanRequest request)
       throws(1:NoSuchObjectException o1, 2:MetaException o2)
 
   WMCreatePoolResponse create_wm_pool(1:WMCreatePoolRequest request)
